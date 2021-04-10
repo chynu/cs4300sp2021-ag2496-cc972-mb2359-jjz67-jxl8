@@ -5,4 +5,9 @@ vagrant/.vagrant
 vagrant/site.retry
 vagrant/a4keypair.pem
 .idea/
-*.iml
+*.iml.DS_Store
+*/.DS_Store
+.DS_Store
+data/.ipynb_checkpoints/
+data/.ipynb_checkpoints/*.ipynb
+.python-version
