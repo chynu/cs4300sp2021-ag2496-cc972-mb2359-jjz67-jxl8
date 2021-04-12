@@ -6,8 +6,8 @@ vagrant/site.retry
 vagrant/a4keypair.pem
 .idea/
 *.iml.DS_Store
-*/.DS_Store
 .DS_Store
-data/.ipynb_checkpoints/
-data/.ipynb_checkpoints/*.ipynb
+**/.DS_Store
+._.DS_Store
+**/._.DS_Store
 .python-version
