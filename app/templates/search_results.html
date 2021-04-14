@@ -21,11 +21,17 @@
                 <form class="form-inline global-search">
                 {% if data %}
                     <h3>{{output_message}}</h3>
+                    <div class="results list">
                     {% for d in data %}
-                        <br>
-                        <h4>{{ d['artist_name'] }}</h4>
-                        <p>{{ d['description'] }}</p>
+                        <div class="item">
+                            <div class="left"><img src="{{ d['img_url'] }}"></div>
+                            <div class="right">
+                                <h4>{{ d['artist_name'] }}</h4>
+                                <p>{{ d['description'] }}</p>
+                            </div>
+                        </div>
                     {% endfor %}
+                    </div>
                 {% endif %}
                 </form>
             </div>
