@@ -1,39 +1,38 @@
 <html>
     <head>
-        <link rel="stylesheet" href="/static/bootstrap.min.css">
-        <link rel="stylesheet" href="/static/main.css">
+        <link rel="stylesheet" href="/static/style/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/style/global.css">
+        <link rel="stylesheet" href="/static/style/home.css">
     </head>
     <body>
-        <div class="topcorner">
-            <p>Project Name: {{ name }}</p>
-            <p>Student Name: ({{ netid }})</p>
-        </div>
-        <form class="form-inline global-search">
-            <h1 style="font-size: 55px; font-family:Futura; color: #4285F4">
-                C
-                <span style="color: #EA4335; ">S</span>
-                <span style="color: #FBBC05; ">4</span>
-                3
-                <span style="color: #34A853; ">0</span>
-                <span style="color: #EA4335; ">0</span>
-            </h1>
-            
-            <br><br>
-            
-            <div class="form-group">
-                <input id="input" type="text" name="search" class="form-control" placeholder="Your Input">
+<!--        <div class="topcorner">-->
+<!--            <p>Project Name: {{ name }}</p>-->
+<!--            <p>Student Name: ({{ netid }})</p>-->
+<!--        </div>-->
+        <div id="searchbox">
+            <div class="sb_left">
+                <img class="logo" src="/static/img/record_logo.svg">
             </div>
-            <button type="submit" class="btn btn-info"> Go! </button>
-        </form>
-        <form class="form-inline global-search">
-        {% if data %}
-            <h1>{{output_message}}</h1>
-            {% for d in data %}  
-                <br>
-                <p>{{d}}</p>
-            {% endfor %}
-        {% endif %}
-        </form>
+            <div class="sb_right">
+                <div class="title">{{ name }}</div>
+                <form class="global-search">
+                    <input id="input" type="text" name="search" placeholder="describe a musical artist here...">
+                    <button class="sb_submit" type="submit"> Go! </button>
+                </form>
+            </div>
+        </div>
+
+        <div id="results">
+            <form class="form-inline global-search">
+            {% if data %}
+                <h1>{{output_message}}</h1>
+                {% for d in data %}
+                    <br>
+                    <p>{{d}}</p>
+                {% endfor %}
+            {% endif %}
+            </form>
+        </div>
     </body>
 
 </html>

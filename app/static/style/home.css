@@ -1,0 +1,60 @@
+
+/* Heading/Logo Elements */
+#searchbox {
+    padding: 20px;
+    background: white;
+    margin: calc(50vh - 130px) 20%;
+    border-radius: 200px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 60%;
+    height: 260px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#searchbox .logo {
+    width: 200px;
+    height: auto;
+    margin: 10px;
+}
+
+#searchbox .title {
+    font-family: 'Abril Fatface', serif;
+    text-transform: uppercase;
+    font-size: 50px;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+#searchbox input {
+    padding: 15px;
+    background: #ededed;
+    border: none;
+    outline: 0px;
+    width: 70%;
+    border-radius: 5px;
+}
+
+#searchbox input:focus {
+    border: none;
+    outline: 0px;
+    box-shadow: unset;
+}
+#searchbox .sb_left {}
+
+#searchbox .sb_right {
+    flex-grow: 3;
+    margin-left: 40px;
+    text-align: left;
+}
+
+#searchbox .sb_submit {
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#results {
+    margin: 20px 20% 10vh 20%;
+}
