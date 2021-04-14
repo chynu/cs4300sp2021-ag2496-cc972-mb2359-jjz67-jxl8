@@ -1,3 +1,10 @@
+/**
+ * RESULTS STYLE PAGE
+ * ========================
+ * This CSS file specifies styling elements for things that are specific to the
+ * search results page. If elements may be used in other pages, please add to global.css instead.
+ */
+
 /* Results Page */
 #results-header {
     width: 100%;

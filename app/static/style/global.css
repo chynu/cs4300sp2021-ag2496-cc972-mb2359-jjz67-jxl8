@@ -1,4 +1,6 @@
 /**
+ * GLOBAL STYLE PAGE
+ * ========================
  * This CSS file will be imported on every page of the website.
  * Only global elements should be defined here.
  */
@@ -6,13 +8,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Open+Sans&family=Roboto+Mono&display=swap');
 
 html,body { margin: 0; }
-
 body {
     background: #75A3A3;
     font-family: 'Roboto Mono', 'Open Sans', sans-serif;
 }
 
-/* Text Elements */
+/* ===== Text Elements ===== */
 p {
     font-family: 'Roboto Mono', 'Open Sans', sans-serif;
     font-size: 13px;
@@ -52,7 +53,7 @@ h4 {
     user-select: none;
 }
 
-/* Header Elements */
+/* ===== Header Elements ===== */
 #searchbox {
     background: white;
     display: flex;
@@ -93,7 +94,7 @@ h4 {
     margin: 10px;
 }
 
-/* Search Input Elements */
+/* ===== Search Input Elements ===== */
 input.search {
     padding: 15px;
     background: #ededed;

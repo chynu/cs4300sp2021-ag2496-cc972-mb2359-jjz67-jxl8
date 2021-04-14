@@ -1,3 +1,10 @@
+/**
+ * HOMEPAGE STYLE PAGE
+ * ========================
+ * This CSS file specifies styling elements for things that are specific to the
+ * main search page. If elements may be used in other pages, please add to global.css instead.
+ */
+
 /* Heading/Logo Elements */
 #searchbox.centered {
     padding: 20px;
@@ -15,4 +22,3 @@
 #searchbox .title {
     margin-bottom: 20px;
 }
-
