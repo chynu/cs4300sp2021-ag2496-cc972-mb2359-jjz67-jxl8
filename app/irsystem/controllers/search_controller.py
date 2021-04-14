@@ -17,7 +17,7 @@ def search():
 		output_message = ''
 		return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data)
 	else:
-		output_message = "Your search: " + query
+		output_message = "Based on your query, " + query + ", we recommend..."
 		data = range(5)
 		return render_template('search_results.html', name=project_name, netid=net_id, output_message=output_message, data=sample_data)
 

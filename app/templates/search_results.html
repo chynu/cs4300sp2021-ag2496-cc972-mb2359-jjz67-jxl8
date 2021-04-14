@@ -7,7 +7,13 @@
     <body>
         <div id="results-header">
             <div class="logo"><a href="/"><img class="record_icon" src="/static/img/record_bordered_logo.svg"></a></div>
-            <div class="title"><a href="/"><h1>{{ name }}</h1></a></div>
+            <div class="title noselect">
+                <a href="/"><h1>{{ name }}</h1></a>
+                <form class="global-search" method="GET">
+                    <input class="search" id="input" type="text" name="search" placeholder="describe a musical artist here...">
+                    <button class="sb_submit" type="submit"> Go! </button>
+                </form>
+            </div>
         </div>
 
         <div id="results-container">

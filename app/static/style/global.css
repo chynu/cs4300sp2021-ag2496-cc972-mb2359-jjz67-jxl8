@@ -37,6 +37,20 @@ h4 {
     font-size: 25px;
     font-weight: 600;
 }
+::selection {
+    background: #bcd6d6;
+}
+::-moz-selection {
+    background: #bcd6d6;
+}
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 
 /* Header Elements */
 #searchbox {
@@ -77,5 +91,25 @@ h4 {
     width: 100px;
     height: auto;
     margin: 10px;
+}
+
+/* Search Input Elements */
+input.search {
+    padding: 15px;
+    background: #ededed;
+    border: none;
+    outline: 0px;
+    width: 70%;
+    border-radius: 5px;
+}
+input.search:focus {
+    border: none;
+    outline: 0px;
+    box-shadow: unset;
+}
+.global-search .sb_submit {
+    border: none;
+    padding: 15px;
+    border-radius: 5px;
 }
 
