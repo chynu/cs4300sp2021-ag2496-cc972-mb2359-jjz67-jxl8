@@ -1,0 +1,17 @@
+/* Heading/Logo Elements */
+#searchbox.pinned {
+    position: absolute;
+    top: -120px; left: -120px;
+    padding: 140px 20px 20px 140px;
+    border-radius: 100px;
+}
+
+#searchbox .logo {
+    width: 100px;
+    height: auto;
+    margin: 10px;
+}
+
+#results {
+    margin: 300px 20% 10vh 20%;
+}

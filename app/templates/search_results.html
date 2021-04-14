@@ -2,23 +2,15 @@
     <head>
         <link rel="stylesheet" href="/static/style/bootstrap.min.css">
         <link rel="stylesheet" href="/static/style/global.css">
-        <link rel="stylesheet" href="/static/style/home.css">
+        <link rel="stylesheet" href="/static/style/results.css">
     </head>
     <body>
-<!--        <div class="topcorner">-->
-<!--            <p>Project Name: {{ name }}</p>-->
-<!--            <p>Student Name: ({{ netid }})</p>-->
-<!--        </div>-->
-        <div id="searchbox" class="centered">
+        <div id="searchbox" class="pinned">
             <div class="sb_left">
                 <a href="/"><img class="logo" src="/static/img/record_logo.svg"></a>
             </div>
             <div class="sb_right">
                 <a href="/"><div class="title">{{ name }}</div></a>
-                <form class="global-search" method="GET">
-                    <input id="input" type="text" name="search" placeholder="describe a musical artist here...">
-                    <button class="sb_submit" type="submit"> Go! </button>
-                </form>
             </div>
         </div>
 
