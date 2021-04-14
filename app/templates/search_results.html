@@ -5,25 +5,30 @@
         <link rel="stylesheet" href="/static/style/results.css">
     </head>
     <body>
-        <div id="searchbox" class="pinned">
-            <div class="sb_left">
-                <a href="/"><img class="logo" src="/static/img/record_logo.svg"></a>
-            </div>
-            <div class="sb_right">
-                <a href="/"><div class="title">{{ name }}</div></a>
-            </div>
+        <div id="results-header">
+            <div class="logo"><a href="/"><img class="record_icon" src="/static/img/record_bordered_logo.svg"></a></div>
+            <div class="title"><a href="/"><h1>{{ name }}</h1></a></div>
         </div>
 
-        <div id="results">
-            <form class="form-inline global-search">
-            {% if data %}
-                <h1>{{output_message}}</h1>
-                {% for d in data %}
-                    <br>
-                    <p>{{d}}</p>
-                {% endfor %}
-            {% endif %}
-            </form>
+        <div id="results-container">
+            <div class="side bar">
+                <h3>Sidebar Header</h3>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras accumsan tincidunt vehicula. Nunc vulputate, lacus vitae cursus aliquam, felis purus vestibulum nisl, id bibendum arcu dui ut enim. Nam fermentum, nunc sit amet porta sodales, elit eros pellentesque ante, et sodales nibh purus condimentum risus. Aliquam ac viverra nunc, eget accumsan eros. Nulla facilisi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris mauris elit, congue eget magna vitae, feugiat hendrerit risus. Maecenas id odio rhoncus, varius velit lobortis, finibus purus. Vestibulum faucibus at nibh vitae mollis. Ut facilisis sapien efficitur fringilla feugiat. Nam purus magna, aliquam in massa non, malesuada dapibus ante. Duis gravida egestas erat, vel molestie purus dapibus at. Aliquam arcu ligula, dapibus et pharetra non, faucibus vel ipsum. Duis dapibus a arcu elementum pretium. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aliquam nec lacinia lectus.
+                </p>
+            </div>
+            <div class="main bar">
+                <form class="form-inline global-search">
+                {% if data %}
+                    <h3>{{output_message}}</h3>
+                    {% for d in data %}
+                        <br>
+                        <h4>{{ d['artist_name'] }}</h4>
+                        <p>{{ d['description'] }}</p>
+                    {% endfor %}
+                {% endif %}
+                </form>
+            </div>
         </div>
     </body>
 

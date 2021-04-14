@@ -13,47 +13,69 @@ body {
 }
 
 /* Text Elements */
-
 p {
     font-family: 'Roboto Mono', 'Open Sans', sans-serif;
-    font-size: 12px;
+    font-size: 13px;
 }
-
 h1 {
     font-family: 'Abril Fatface', serif;
     text-transform: uppercase;
     font-size: 50px;
     letter-spacing: 2px;
 }
+h2 {
+    font-family: 'Abril Fatface', serif;
+    font-size: 40px;
+    letter-spacing: 1px;
+}
+h3 {
+    font-family: 'Abril Fatface', serif;
+    font-size: 30px;
+}
+h3 {
+    font-family: 'Roboto Mono', 'Open Sans', sans-serif;
+    font-size: 28px;
+    font-weight: 600;
+}
 
-/* Styling Containers */
+/* Header Elements */
 #searchbox {
     background: white;
     display: flex;
     justify-content: flex-start;
     align-items: center;
     width: 60%;
+    min-width: 650px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-
-#searchbox .title {
+#searchbox .title a {
     font-family: 'Abril Fatface', serif;
     text-transform: uppercase;
     letter-spacing: 2px;
     font-size: 50px;
     color: #303030;
 }
-
-#searchbox a,
-#searchbox a:hover {
+.title a,
+.title a:hover {
     text-decoration:none;
     text-underline: none;
 }
-
 #searchbox .sb_left {}
-
 #searchbox .sb_right {
     flex-grow: 3;
     margin-left: 40px;
     text-align: left;
 }
+#searchbox.pinned {
+    /* styling for when title is in top left */
+    position: absolute;
+    top: -120px; left: -120px;
+    padding: 140px 20px 20px 140px;
+    border-radius: 100px;
+}
+#searchbox.pinned .record_icon {
+    width: 100px;
+    height: auto;
+    margin: 10px;
+}
+

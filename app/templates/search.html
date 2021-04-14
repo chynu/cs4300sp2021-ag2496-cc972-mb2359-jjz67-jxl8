@@ -11,27 +11,15 @@
 <!--        </div>-->
         <div id="searchbox" class="centered">
             <div class="sb_left">
-                <a href="/"><img class="logo" src="/static/img/record_logo.svg"></a>
+                <a href="/"><img class="record_icon" src="/static/img/record_logo.svg"></a>
             </div>
             <div class="sb_right">
-                <a href="/"><div class="title">{{ name }}</div></a>
+                <div class="title"><a href="/">{{ name }}</a></div>
                 <form class="global-search" method="GET">
                     <input id="input" type="text" name="search" placeholder="describe a musical artist here...">
                     <button class="sb_submit" type="submit"> Go! </button>
                 </form>
             </div>
-        </div>
-
-        <div id="results">
-            <form class="form-inline global-search">
-            {% if data %}
-                <h1>{{output_message}}</h1>
-                {% for d in data %}
-                    <br>
-                    <p>{{d}}</p>
-                {% endfor %}
-            {% endif %}
-            </form>
         </div>
     </body>
 

@@ -1,17 +1,35 @@
-/* Heading/Logo Elements */
-#searchbox.pinned {
-    position: absolute;
-    top: -120px; left: -120px;
-    padding: 140px 20px 20px 140px;
-    border-radius: 100px;
+/* Results Page */
+#results-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
 }
-
-#searchbox .logo {
-    width: 100px;
+#results-header h1 {
+    color: white;
+    letter-spacing: 8px;
+}
+.logo { margin-right: 50px; }
+.logo img {
+    width: 20vw;
     height: auto;
-    margin: 10px;
 }
-
-#results {
-    margin: 300px 20% 10vh 20%;
+#results-container {
+    display: flex;
+    margin-top: 60px;
+    margin-bottom: 100px;
+}
+#results-container .side.bar {
+    flex: 0 4 auto;
+    margin-left: 50px;
+    max-width: 30vw;
+}
+#results-container .main.bar {
+    flex: 4 0 auto;
+    margin-right: 50px;
+}
+#results-container .bar {
+    margin: 20px;
+    background: white;
+    padding: 30px 50px;
+    border-radius: 10px;
 }
