@@ -14,6 +14,8 @@ sample_data = [
 @irsystem.route('/', methods=['GET'])
 def search():
 	query = request.args.get('search')
+	ling_desc = request.args.get('ling_desc')
+	disliked_artist = request.args.get('disliked_artist')
 	if not query:
 		data = []
 		output_message = ''
