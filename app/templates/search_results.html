@@ -4,51 +4,70 @@
 -->
 
 <html>
-    <head>
-        <link rel="stylesheet" href="/static/style/bootstrap.min.css">
-        <link rel="stylesheet" href="/static/style/global.css">
-        <link rel="stylesheet" href="/static/style/results.css">
-    </head>
-    <body>
-        <!-- RESULTS PAGE HEADER -->
-        <div id="results-header">
-            <div class="logo"><a href="/"><img class="record_icon" src="/static/img/record_bordered_logo.svg"></a></div>
-            <div class="title noselect">
-                <a href="/"><h1>{{ name }}</h1></a>
-                <form class="global-search" method="GET">
-                    <input class="search" id="input" type="text" name="search" placeholder="describe a musical artist here...">
-                    <button class="sb_submit" type="submit"> Go! </button>
-                </form>
-            </div>
-        </div>
 
-        <!-- RESULTS PAGE RESULTS -->
-        <div id="results-container">
-            <div class="side bar">
-                <h3>Sidebar Header</h3>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras accumsan tincidunt vehicula. Nunc vulputate, lacus vitae cursus aliquam, felis purus vestibulum nisl, id bibendum arcu dui ut enim. Nam fermentum, nunc sit amet porta sodales, elit eros pellentesque ante, et sodales nibh purus condimentum risus. Aliquam ac viverra nunc, eget accumsan eros. Nulla facilisi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris mauris elit, congue eget magna vitae, feugiat hendrerit risus. Maecenas id odio rhoncus, varius velit lobortis, finibus purus. Vestibulum faucibus at nibh vitae mollis. Ut facilisis sapien efficitur fringilla feugiat. Nam purus magna, aliquam in massa non, malesuada dapibus ante. Duis gravida egestas erat, vel molestie purus dapibus at. Aliquam arcu ligula, dapibus et pharetra non, faucibus vel ipsum. Duis dapibus a arcu elementum pretium. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aliquam nec lacinia lectus.
-                </p>
-            </div>
-            <div class="main bar">
-                <form class="form-inline global-search">
-                {% if data %}
-                    <h3>{{output_message}}</h3>
-                    <div class="results list">
-                    {% for d in data %}
-                        <div class="item">
-                            <div class="left"><img src="{{ d['img_url'] }}"></div>
-                            <div class="right">
-                                <h4>{{ d['artist_name'] }}</h4>
-                                <p>{{ d['description'] }}</p>
-                            </div>
-                        </div>
-                    {% endfor %}
-                    </div>
-                {% endif %}
-                </form>
-            </div>
+<head>
+    <link rel="stylesheet" href="/static/style/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/style/global.css">
+    <link rel="stylesheet" href="/static/style/results.css">
+</head>
+
+<body>
+    <!-- RESULTS PAGE HEADER -->
+    <div id="results-header">
+        <div class="logo"><a href="/"><img class="record_icon" src="/static/img/record_bordered_logo.svg"></a></div>
+        <div class="title noselect">
+            <a href="/">
+                <h1>{{ name }}</h1>
+            </a>
+            <form class="global-search" method="GET">
+                <input class="search" id="input" type="text" name="search"
+                    placeholder="describe a musical artist here...">
+                <input class="search" id="input" type="text" name="ling_desc"
+                    placeholder="describe a mood, tempo, rhythm, etc.">
+                <input class="search" id="input" type="text" name="disliked_artist"
+                    placeholder="which artist do you NOT like?">
+                <button class="sb_submit" type="submit"> Go! </button>
+            </form>
         </div>
-    </body>
+    </div>
+
+    <!-- RESULTS PAGE RESULTS -->
+    <div id="results-container">
+        <div class="side bar">
+            <h3>Sidebar Header</h3>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras accumsan tincidunt vehicula. Nunc
+                vulputate, lacus vitae cursus aliquam, felis purus vestibulum nisl, id bibendum arcu dui ut enim. Nam
+                fermentum, nunc sit amet porta sodales, elit eros pellentesque ante, et sodales nibh purus condimentum
+                risus. Aliquam ac viverra nunc, eget accumsan eros. Nulla facilisi. Pellentesque habitant morbi
+                tristique senectus et netus et malesuada fames ac turpis egestas. Mauris mauris elit, congue eget magna
+                vitae, feugiat hendrerit risus. Maecenas id odio rhoncus, varius velit lobortis, finibus purus.
+                Vestibulum faucibus at nibh vitae mollis. Ut facilisis sapien efficitur fringilla feugiat. Nam purus
+                magna, aliquam in massa non, malesuada dapibus ante. Duis gravida egestas erat, vel molestie purus
+                dapibus at. Aliquam arcu ligula, dapibus et pharetra non, faucibus vel ipsum. Duis dapibus a arcu
+                elementum pretium. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus
+                mus. Aliquam nec lacinia lectus.
+            </p>
+        </div>
+        <div class="main bar">
+            <form class="form-inline global-search">
+                {% if data %}
+                <h3>{{output_message}}</h3>
+                <div class="results list">
+                    {% for d in data %}
+                    <div class="item">
+                        <div class="left"><img src="{{ d['img_url'] }}"></div>
+                        <div class="right">
+                            <h4>{{ d['artist_name'] }}</h4>
+                            <p>{{ d['description'] }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</body>
 
 </html>
