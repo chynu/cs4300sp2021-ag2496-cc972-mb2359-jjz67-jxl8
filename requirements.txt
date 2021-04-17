@@ -56,3 +56,4 @@ WTForms==2.2.1
 pandas==1.2.3
 jupyter==1.0.0
 seaborn==0.11.1
+lyricsgenius==3.0.0
