@@ -58,7 +58,7 @@ h4 {
     background: white;
     display: flex;
     justify-content: flex-start;
-    align-items: center;
+    align-items: flex-start;
     width: 60%;
     min-width: 650px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -95,13 +95,22 @@ h4 {
 }
 
 /* ===== Search Input Elements ===== */
+#search_fields {
+    display: flex;
+}
+.search_item {
+    padding: 0;
+    margin: 0;
+}
 input.search {
+    /* Matches all search input boxes */
     padding: 15px;
-    background: #ededed;
+    background: #e3e3e3;
     border: none;
     outline: 0px;
-    width: 70%;
+    width: 200px;
     border-radius: 5px;
+    margin-right: 10px;
 }
 input.search:focus {
     border: none;
@@ -112,5 +121,28 @@ input.search:focus {
     border: none;
     padding: 15px;
     border-radius: 5px;
+    height: 50px;
+    background: #95bfbf;
+    color: white;
+    transition: all 500ms ease-in-out;
+}
+.global-search .sb_submit:hover {
+    background: #75A3A3;
+    color: white;
 }
 
+/* Autocomplete Stying */
+.autocomplete-items {
+    width: 200px;
+    border-radius: 5px;
+    border: 1px solid #e3e3e3;
+    background: #fafafa;
+    z-index: 9999999999;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.autocomplete-suggestion {
+    padding: 10px;
+}
+.autocomplete-suggestion:hover, .autocomplete-active {
+    background: #abc7c7;
+}

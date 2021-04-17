@@ -12,7 +12,6 @@
     border-radius: 200px;
     height: 260px;
 }
-
 #searchbox .record_icon {
     width: 200px;
     height: auto;
@@ -21,4 +20,5 @@
 
 #searchbox .title {
     margin-bottom: 20px;
+    margin-top: 40px;
 }

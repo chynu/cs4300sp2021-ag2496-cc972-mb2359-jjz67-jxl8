@@ -19,14 +19,16 @@
             <a href="/">
                 <h1>{{ name }}</h1>
             </a>
-            <form class="global-search" method="GET">
-                <input class="search" id="input" type="text" name="search"
-                    placeholder="describe a musical artist here...">
-                <input class="search" id="input" type="text" name="ling_desc"
-                    placeholder="describe a mood, tempo, rhythm, etc.">
-                <input class="search" id="input" type="text" name="disliked_artist"
-                    placeholder="which artist do you NOT like?">
-                <button class="sb_submit" type="submit"> Go! </button>
+            <form class="global-search" method="GET" autocomplete="off">
+                <div id="search_fields">
+                    <div class="search_item"><input class="search fav_artist" id="input" type="text" name="search"
+                        placeholder="your favorite artist"></div>
+                    <div class="search_item"><input class="search ling_desc" id="input" type="text" name="ling_desc"
+                        placeholder="describe a mood, tempo, rhythm, etc."></div>
+                    <div class="search_item"><input class="search disliked_artist" id="input" type="text" name="disliked_artist"
+                        placeholder="which artist do you NOT like?"></div>
+                    <button class="sb_submit" type="submit"> ▶ </button>
+                </div>
             </form>
         </div>
     </div>
@@ -69,5 +71,5 @@
         </div>
     </div>
 </body>
-
+<script src="/static/scripts/search_autocomplete.js"></script>
 </html>
