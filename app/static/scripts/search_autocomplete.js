@@ -1,5 +1,5 @@
 /**
- * Initialized autocomplete dropdown for the elements provided in the input.
+ * Initializes autocomplete dropdown for the elements provided in the input.
  * Code derived from W3Schools.
  *
  * @param inp Input Element to add the event listener to.
