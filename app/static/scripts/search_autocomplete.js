@@ -28,21 +28,13 @@ function initAutoCompleteDropdown(inp, arr) {
         // Check similarity for each element in the suggestion list
         for (i = 0; i < arr.length; i++) {
             if (isSimilarEnough(val, arr[i])) {
-                // If similar enough, display in dropdown
-                b = document.createElement("div");
-                b.setAttribute("class", "autocomplete-suggestion");
-                b.innerHTML = arr[i];
-                b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-
-                // Search field populates on suggestion click
-                b.addEventListener("click", (elClickEvent) => {
-                    inp.value = elClickEvent.target.getElementsByTagName("input")[0].value;
-                    closeAllLists();
-                });
-
-                // Append suggestion div to dropdown
-                a.appendChild(b);
+                a.appendChild(createSuggestion(arr[i], inp)); // Append suggestion div to dropdown
             }
+        }
+        if (a.childElementCount == 0) {
+            a.appendChild(createSuggestion("No artist found", inp, true));
+        } else if (a.classList.includes('dummy_dropdown')) {
+            // TODO(celine): Make dummy element unselectable
         }
     });
 
@@ -51,8 +43,8 @@ function initAutoCompleteDropdown(inp, arr) {
         let x = document.getElementById(keydownEvent.target.id + "autocomplete-list");
         if (x) x = x.getElementsByTagName("div");
         if (keydownEvent.key == "Enter") {
-            keydownEvent.preventDefault();
             if (currentFocus > -1) {
+                keydownEvent.preventDefault();
                 if (x) x[currentFocus].click();
             }
         } else if (keydownEvent.key == "ArrowDown") {
@@ -61,8 +53,12 @@ function initAutoCompleteDropdown(inp, arr) {
         } else if (keydownEvent.key == "ArrowUp") {
             currentFocus--;
             addActive(x);
+        } else if (keydownEvent.key == 'Escape') {
+            closeAllLists();
+            currentFocus = -1;
         }
     });
+
     function addActive(x) {
         if (!x) return false;
         removeActive(x);
@@ -83,6 +79,26 @@ function initAutoCompleteDropdown(inp, arr) {
             }
         }
     }
+    function createSuggestion(suggestionContent, inputDOM, opt_isUnselectable) {
+        let suggestion = document.createElement("div");
+        suggestion.innerHTML = suggestionContent;
+        if (!opt_isUnselectable) {
+            suggestion.setAttribute("class", "autocomplete-suggestion");
+            suggestion.innerHTML += "<input type='hidden' value='" + suggestionContent + "'>";
+
+            // Search field populates on suggestion click
+            suggestion.addEventListener("click", (elClickEvent) => {
+                inputDOM.value = elClickEvent.target.getElementsByTagName("input")[0].value;
+                closeAllLists();
+            });
+        } else {
+            suggestion.setAttribute("class", "autocomplete-suggestion autocomplete-dummy");
+        }
+        return suggestion;
+    }
+    function isDummyDropdown(inputDOM) {
+        return false;
+    }
 
     // Close dropdown when user clicks on a suggestion
     document.addEventListener("click", (clickEvent) => {
@@ -102,9 +118,3 @@ function isSimilarEnough(userInput, targetString) {
     // TODO: Potentially implement some form of simple cosine sim...?
     return targetString.substr(0, userInput.length).toUpperCase() == userInput.toUpperCase();
 }
-
-let countries = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Anguilla", "Antigua & Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia & Herzegovina", "Botswana", "Brazil", "British Virgin Islands", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands", "Central Arfrican Republic", "Chad", "Chile", "China", "Colombia", "Congo", "Cook Islands", "Costa Rica", "Cote D Ivoire", "Croatia", "Cuba", "Curacao", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Falkland Islands", "Faroe Islands", "Fiji", "Finland", "France", "French Polynesia", "French West Indies", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea Bissau", "Guyana", "Haiti", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Isle of Man", "Israel", "Italy", "Jamaica", "Japan", "Jersey", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macau", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Montserrat", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauro", "Nepal", "Netherlands", "Netherlands Antilles", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Puerto Rico", "Qatar", "Reunion", "Romania", "Russia", "Rwanda", "Saint Pierre & Miquelon", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "St Kitts & Nevis", "St Lucia", "St Vincent", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor L'Este", "Togo", "Tonga", "Trinidad & Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks & Caicos", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States of America", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Virgin Islands (US)", "Yemen", "Zambia", "Zimbabwe"];
-let artists = ["Beyonce", "Beatrice", "Rihanna", "Ricch Roddy"];
-
-initAutoCompleteDropdown(document.getElementsByClassName("fav_artist")[0], artists);
-initAutoCompleteDropdown(document.getElementsByClassName("disliked_artist")[0], artists);

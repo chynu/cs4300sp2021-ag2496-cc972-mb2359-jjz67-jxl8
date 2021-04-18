@@ -67,12 +67,19 @@ def search():
     ling_desc = request.args.get('ling_desc')
     disliked_artist = request.args.get('disliked_artist')
     data = get_results(query, ling_desc, disliked_artist)
+    all_artist_names = [s.replace('\'', '').replace('\"', '') for s in artist_details.artists.unique()]
+
     if (not query):       # empty query
         output_message = ''
-        return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data)
+        return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data,\
+                               artist_names=all_artist_names)
     elif (data == []):    # query returned no results
         output_message = ''
-        return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data)
+        return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data,\
+                               artist_names=all_artist_names,\
+                               query_info={"artist_name":query, "ling_desc":ling_desc, "disliked_artist":disliked_artist})
     else:
         output_message = "Based on your query, " + query + ", we recommend..."
-        return render_template('search_results.html', name=project_name, netid=net_id, output_message=output_message, data=data)
+        return render_template('search_results.html', name=project_name, netid=net_id, output_message=output_message, data=data,\
+                               artist_names=all_artist_names,\
+                               query_info={"artist_name":query, "ling_desc":ling_desc, "disliked_artist":disliked_artist})

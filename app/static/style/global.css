@@ -139,9 +139,16 @@ input.search:focus {
     background: #fafafa;
     z-index: 9999999999;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    max-height: 30vh;
+    overflow: scroll;
+    margin-top: 3px;
 }
 .autocomplete-suggestion {
     padding: 10px;
+}
+.autocomplete-dummy {
+    color: #8a8a8a;
+    font-style: italic;
 }
 .autocomplete-suggestion:hover, .autocomplete-active {
     background: #abc7c7;

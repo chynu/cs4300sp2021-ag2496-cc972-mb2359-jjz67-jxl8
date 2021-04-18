@@ -39,4 +39,11 @@
     </div>
 </body>
 <script src="/static/scripts/search_autocomplete.js"></script>
+<script>
+// Instantiating code goes here so that we can make use of Flask templates
+let artists = [{% for artist in artist_names %}'{{artist}}',{% endfor %}""];
+
+initAutoCompleteDropdown(document.getElementsByClassName("fav_artist")[0], artists);
+initAutoCompleteDropdown(document.getElementsByClassName("disliked_artist")[0], artists);
+</script>
 </html>
