@@ -25,10 +25,10 @@ def get_artist_photo(artist_name):
     return artist_photo
 
 def find_artist(artist_name, tf_idf=tf_idf):
-    arr = np.argwhere(tf_idf.values[:, 0] == artist_name)
-    if (arr == []):
+    try:
+        return np.argwhere(tf_idf.values[:, 0] == artist_name)[0][0]
+    except:
         return -1
-    return arr[0][0]
 
 def get_rec_artists(query, ling_desc, disliked_artist):
     rec_artists = []
