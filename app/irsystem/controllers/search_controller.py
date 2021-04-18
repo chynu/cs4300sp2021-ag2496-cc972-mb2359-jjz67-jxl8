@@ -17,12 +17,6 @@ artist_names = tf_idf.values[:,0]
 artist_name_to_index = {artist_names[i]: i for i in range(len(artist_names))}
 matrix = tf_idf.to_numpy()[:,1:]
 
-# TODO: Remove the `sample_data` variable once we are able to dynamically retrieve data. This is here for demo purposes.
-# sample_data = [
-# 	{'artist_name': 'Amerie', 'description': 'Lorem ipsum', 'img_url': 'https://upload.wikimedia.org/wikipedia/en/d/dc/Amerie_-_All_I_Have_album.jpg'},
-# 	{'artist_name': 'Christina Aguilera', 'description': 'Lorem ipsum', 'img_url': 'https://upload.wikimedia.org/wikipedia/en/0/07/Christinaaguilera-christinaaguilera.jpg'},
-# 	{'artist_name': 'Rhianna', 'description': 'Lorem ipsum', 'img_url': 'https://upload.wikimedia.org/wikipedia/en/3/32/Rihanna_-_Anti.png'}]
-
 def find_artist(artist_name, csv):
     """ Returns index of [artist_name].
     
@@ -156,7 +150,7 @@ def search():
     ling_desc = request.args.get('ling_desc')
     disliked_artist = request.args.get('disliked_artist')
     data = get_results(query, ling_desc, disliked_artist)
-    all_artist_names = [s.replace('\'', '').replace('\"', '') for s in artist_details.artists.unique()]
+    all_artist_names = [s.replace('\'', '').replace('\"', '') for s in artist_names]
 
     if (not query):       # empty query
         output_message = ''
@@ -166,9 +160,9 @@ def search():
         output_message = ''
         return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data,\
                                artist_names=all_artist_names,\
-                               query_info={"artist_name":query, "ling_desc":ling_desc, "disliked_artist":disliked_artist})
+                               query_info={"artist_name": query, "ling_desc": ling_desc, "disliked_artist": disliked_artist})
     else:
-        output_message = "Based on your query, " + query + ", we recommend..."
+        output_message = "Since you like " + query + "'s music, we recommend..."
         return render_template('search_results.html', name=project_name, netid=net_id, output_message=output_message, data=data,\
                                artist_names=all_artist_names,\
-                               query_info={"artist_name":query, "ling_desc":ling_desc, "disliked_artist":disliked_artist})
+                               query_info={"artist_name": query, "ling_desc": ling_desc, "disliked_artist": disliked_artist})

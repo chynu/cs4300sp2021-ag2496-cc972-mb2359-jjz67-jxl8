@@ -33,9 +33,7 @@ function initAutoCompleteDropdown(inp, arr) {
         }
         if (a.childElementCount == 0) {
             a.appendChild(createSuggestion("No artist found", inp, true));
-        } else if (a.classList.includes('dummy_dropdown')) {
-            // TODO(celine): Make dummy element unselectable
-        }
+        } // TODO(celine): Make dummy element unselectable
     });
 
     // Lets users key up and down between suggestions
