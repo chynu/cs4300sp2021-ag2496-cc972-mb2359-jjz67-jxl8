@@ -8,10 +8,15 @@ import zipfile
 project_name = "Similar Singer"
 net_id = "Alyssa Gao (ag2496), Celine Choo (cc972), Mahak Bindal (mb2359), Jerilyn Zheng (jjz67), Jasper Liang (jxl8)"
 
-with zipfile.ZipFile('lyrics_data/tfidf_svd.zip', 'r') as zip_ref:
-    zip_ref.extractall('lyrics_data')
-tf_idf = pd.read_csv('lyrics_data/tfidf_mat_uncompressed.csv')
-artist_details = pd.read_csv('compiled-w-songs_new.csv')
+DATA_DIRECTORY = 'data/processed'
+TFIDF_ZIP_PATH = DATA_DIRECTORY + '/tfidf_svd.zip'
+TFIDF_FILE_PATH = DATA_DIRECTORY + '/tfidf_mat_uncompressed.csv'
+ARTIST_DETAILS_PATH = DATA_DIRECTORY + '/compiled-w-songs_new.csv'
+
+with zipfile.ZipFile(TFIDF_ZIP_PATH, 'r') as zip_ref:
+    zip_ref.extractall(DATA_DIRECTORY)
+tf_idf = pd.read_csv(TFIDF_FILE_PATH)
+artist_details = pd.read_csv(ARTIST_DETAILS_PATH)
 
 artist_names = tf_idf.values[:,0]
 artist_name_to_index = {artist_names[i]: i for i in range(len(artist_names))}
