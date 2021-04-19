@@ -10,16 +10,10 @@ net_id = "Alyssa Gao (ag2496), Celine Choo (cc972), Mahak Bindal (mb2359), Jeril
 
 DATA_DIRECTORY = 'data/processed'
 NUM_TFIDF_FILES = 5
-TFIDF_FILES = [DATA_DIRECTORY + '/tfidf_uncompressed/tfidf_' + str(i) + '.csv' for i in range(1, NUM_TFIDF_FILES+1)]
+TFIDF_FILE = DATA_DIRECTORY + '/tfidf_mat_compressed.csv'
 ARTIST_DETAILS_PATH = DATA_DIRECTORY + '/compiled-w-songs_new.csv'
 
-tf_idf = pd.read_csv(TFIDF_FILES[0])
-columns = tf_idf.columns
-for file in TFIDF_FILES[1:]:
-    data = pd.read_csv(file)
-    data.columns = columns
-    
-    tf_idf = tf_idf.append(data)
+tf_idf = pd.read_csv(TFIDF_FILE)
 artist_details = pd.read_csv(ARTIST_DETAILS_PATH)
 
 artist_names = tf_idf.values[:,0]
