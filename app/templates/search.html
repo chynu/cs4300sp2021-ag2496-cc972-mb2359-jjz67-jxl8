@@ -24,14 +24,19 @@
         </div>
         <div class="sb_right">
             <div class="title noselect"><a href="/">{{ name }}</a></div>
+            <div class="search_item">
+                {% if query_info %}
+                <p style="color: red;"> Artist Not Found.</p>
+                {% endif %}
+            </div>
             <form class="global-search" method="GET" autocomplete="off">
                 <div id="search_fields">
                     <div class="search_item"><input class="search fav_artist" id="input" type="text" name="search"
-                        placeholder="your favorite artist"></div>
+                            placeholder="your favorite artist"></div>
                     <div class="search_item"><input class="search ling_desc" id="input" type="text" name="ling_desc"
-                        placeholder="describe a mood, tempo, rhythm, etc."></div>
-                    <div class="search_item"><input class="search disliked_artist" id="input" type="text" name="disliked_artist"
-                        placeholder="which artist do you NOT like?"></div>
+                            placeholder="describe a mood, tempo, rhythm, etc."></div>
+                    <div class="search_item"><input class="search disliked_artist" id="input" type="text"
+                            name="disliked_artist" placeholder="which artist do you NOT like?"></div>
                     <button class="sb_submit" type="submit"> ▶ </button>
                 </div>
             </form>
@@ -40,11 +45,12 @@
 </body>
 <script src="/static/scripts/search_autocomplete.js"></script>
 <script>
-// Instantiating code goes here so that we can make use of Flask templates
-let artists = [{% for artist in artist_names %}'{{artist}}',{% endfor %}""].slice(0,-1);
-console.log(artists.length);
+    // Instantiating code goes here so that we can make use of Flask templates
+    let artists = [{% for artist in artist_names %}'{{artist}}', {% endfor %}""].slice(0, -1);
+    console.log(artists.length);
 
-initAutoCompleteDropdown(document.getElementsByClassName("fav_artist")[0], artists);
-initAutoCompleteDropdown(document.getElementsByClassName("disliked_artist")[0], artists);
+    initAutoCompleteDropdown(document.getElementsByClassName("fav_artist")[0], artists);
+    initAutoCompleteDropdown(document.getElementsByClassName("disliked_artist")[0], artists);
 </script>
+
 </html>
