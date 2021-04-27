@@ -12,3 +12,4 @@ vagrant/a4keypair.pem
 **/._.DS_Store
 .python-version
 data/raw/mard_reviews/**
+scripts/.ipynb_checkpoints/
