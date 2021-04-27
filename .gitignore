@@ -1,4 +1,5 @@
 venv
+cs4300-env
 *.pyc
 migrations 
 vagrant/.vagrant
