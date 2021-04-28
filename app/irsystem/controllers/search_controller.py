@@ -4,7 +4,8 @@ from app.irsystem.models.helpers import NumpyEncoder as NumpyEncoder
 import pandas as pd
 import numpy as np
 import zipfile
-from app.irsystem.models.singernlp.ArtistReviewLoader import ArtistReviewLoader
+# TODO: Import when SingerNLP package is ready
+# from app.irsystem.models.singernlp.ArtistReviewLoader import ArtistReviewLoader
 
 project_name = "Similar Singer"
 net_id = "Alyssa Gao (ag2496), Celine Choo (cc972), Mahak Bindal (mb2359), Jerilyn Zheng (jjz67), Jasper Liang (jxl8)"
@@ -20,8 +21,6 @@ artist_details = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp20
 artist_names = tf_idf.values[:,0]
 artist_name_to_index = {artist_names[i]: i for i in range(len(artist_names))}
 matrix = tf_idf.to_numpy()[:,1:]
-
-test_arl = ArtistReviewLoader()
 
 def find_artist(artist_name, csv):
     """ Returns index of [artist_name].
