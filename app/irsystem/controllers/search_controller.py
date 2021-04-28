@@ -8,13 +8,13 @@ import zipfile
 project_name = "Similar Singer"
 net_id = "Alyssa Gao (ag2496), Celine Choo (cc972), Mahak Bindal (mb2359), Jerilyn Zheng (jjz67), Jasper Liang (jxl8)"
 
-DATA_DIRECTORY = 'data/processed'
-NUM_TFIDF_FILES = 5
-TFIDF_FILE = DATA_DIRECTORY + '/tfidf_mat_compressed.csv'
-ARTIST_DETAILS_PATH = DATA_DIRECTORY + '/compiled-w-songs_new.csv'
+##DATA_DIRECTORY = 'data/processed'
+##NUM_TFIDF_FILES = 5
+##TFIDF_FILE = DATA_DIRECTORY + '/tfidf_mat_compressed.csv'
+##ARTIST_DETAILS_PATH = DATA_DIRECTORY + '/compiled-w-songs_new.csv'
 
-tf_idf = pd.read_csv(TFIDF_FILE)
-artist_details = pd.read_csv(ARTIST_DETAILS_PATH)
+tf_idf = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/data/processed/tfidf_mat_compressed.csv")
+artist_details = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/data/processed/compiled-w-songs_new.csv")
 
 artist_names = tf_idf.values[:,0]
 artist_name_to_index = {artist_names[i]: i for i in range(len(artist_names))}
@@ -93,7 +93,8 @@ def rocchio_update(query, query_obj, input_doc_mat=matrix, \
     return np.clip(rocchio, 0, None)
 
 def cosine_similarity(query_vec, tfidf_mat=matrix, artist_names=artist_names):
-    """ Returns ranking of artist names using cosine similarity with query_vec.
+    """ Returns ranking of artist names and their similarity score
+        using cosine similarity with query_vec.
     
     Params: {query_vec: np.ndarray - (k,)
              tfidf_mat: np.ndarray - d x k (where d is number of documents/artists,
@@ -104,11 +105,11 @@ def cosine_similarity(query_vec, tfidf_mat=matrix, artist_names=artist_names):
     scores = tfidf_mat.dot(query_vec)
     ranking = np.argsort(scores)
     
-    return [artist_names[i] for i in ranking[::-1]]
+    return [(artist_names[i], scores[i]) for i in ranking[::-1]]
 
 def get_rec_artists(query, ling_desc, disliked_artist, artist_name_to_index=artist_name_to_index):
-    """ Returns list of recommended artists that are similar to [query] and dissimilar
-        to [disliked_artist].
+    """ Returns list of recommended artists and their similarity scores 
+        that are similar to [query] and dissimilar to [disliked_artist].
     
     Parameters: {query: String (liked artist)
                  ling_desc: String
@@ -126,12 +127,12 @@ def get_rec_artists(query, ling_desc, disliked_artist, artist_name_to_index=arti
     }
     query_vec = rocchio_update(idx, query_obj)
     
-    artist_ranking = list(filter(lambda x: x != query, cosine_similarity(query_vec)))
+    artist_ranking = list(filter(lambda x: x[0] != query, cosine_similarity(query_vec)))
     return artist_ranking[:10]
 
 def get_results(query, ling_desc, disliked_artist):
     """ Returns list of recommended artists who are similar to [query] and dissimilar
-        to [disliked_artist] along with their name, description and photo.
+        to [disliked_artist] along with their similarity score, description and photo.
     
     Parameters: {query: String (liked artist)
                  ling_desc: String
@@ -142,8 +143,9 @@ def get_results(query, ling_desc, disliked_artist):
     top_rec_artists = get_rec_artists(query, ling_desc, disliked_artist)
     if (top_rec_artists == []):
         return []
-    for artist in top_rec_artists:
-        data.append({'artist_name' : artist, 'description' : get_artist_description(artist), 'img_url' : get_artist_photo(artist)})
+    for artist, score in top_rec_artists:
+        data.append({'artist_name' : artist, 'sim_score' : str(round(score, 2)), \
+                    'description' : get_artist_description(artist), 'img_url' : get_artist_photo(artist)})
     return data    
 
 @irsystem.route('/', methods=['GET'])
