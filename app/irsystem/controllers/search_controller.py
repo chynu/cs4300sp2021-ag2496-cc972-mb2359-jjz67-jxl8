@@ -13,25 +13,35 @@ net_id = "Alyssa Gao (ag2496), Celine Choo (cc972), Mahak Bindal (mb2359), Jeril
 ssl._create_default_https_context = ssl._create_unverified_context
 
 tf_idf = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/data/processed/tfidf_mat_compressed.csv")
-artist_details = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/data/processed/compiled-w-songs_new.csv")
+artist_details = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/removed_dups_new.csv")
 jaccard = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/data/processed/jaccard.csv",index_col=[0]).to_numpy()
 
 artist_names = tf_idf.values[:,0]
 artist_name_to_index = {artist_names[i]: i for i in range(len(artist_names))}
 matrix = tf_idf.to_numpy()[:,1:]
 
-def find_artist(artist_name, csv):
-    """ Returns index of [artist_name].
+def get_artist_song_id(artist_name):
+    """ Returns song id of [artist_name].
     
     Parameters: {artist_name: String}
-    Returns: Int
+    Returns: String
     """
-    col = 1 if (csv.values[0, 0] == 0) else 0 # checking which column contains the list of artists
     try:
-        return np.argwhere(csv.values[:, col] == artist_name)[0][0]
+        return artist_details['Song ID'][artist_name_to_index[artist_name]]
     except:
-        return -1
+        return "no song"
 
+def get_artist_url(artist_name):
+    """ Returns url of [artist_name]'s profile.
+    
+    Parameters: {artist_name: String}
+    Returns: String
+    """
+    try:
+        return artist_details['Artist URL'][artist_name_to_index[artist_name]]
+    except:
+        return "no url"
+    
 def get_artist_description(artist_name):
     """ Returns description of [artist_name].
     
@@ -39,7 +49,7 @@ def get_artist_description(artist_name):
     Returns: String
     """
     try:
-        followers = artist_details['followers'][find_artist(artist_name, artist_details)]
+        followers = artist_details['followers'][artist_name_to_index[artist_name]]
         return artist_name + " has " + str(followers) + " followers on Spotify."
     except:
         return "Couldn't find additional details on " + artist_name + ". "
@@ -51,7 +61,7 @@ def get_artist_photo(artist_name):
     Returns: String
     """
     try:
-        return artist_details['Image URL'][find_artist(artist_name, artist_details)]
+        return artist_details['Image URL'][artist_name_to_index[artist_name]]
     except:
         return "https://www.pngitem.com/pimgs/m/148-1487614_spotify-logo-small-spotify-logo-transparent-hd-png.png"
 
