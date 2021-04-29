@@ -1,6 +1,7 @@
 from . import *  
 from app.irsystem.models.helpers import *
 from app.irsystem.models.helpers import NumpyEncoder as NumpyEncoder
+from sklearn.preprocessing import normalize
 import pandas as pd
 import numpy as np
 import zipfile
@@ -18,6 +19,7 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 tf_idf = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/data/processed/tfidf_mat_compressed.csv")
 artist_details = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/data/processed/compiled-w-songs_new.csv")
+jaccard = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/scripts/jaccard.csv",index_col=[0]).to_numpy()
 
 artist_names = tf_idf.values[:,0]
 artist_name_to_index = {artist_names[i]: i for i in range(len(artist_names))}
@@ -106,9 +108,10 @@ def cosine_similarity(query_vec, tfidf_mat=matrix, artist_names=artist_names):
     Returns: List
     """
     scores = tfidf_mat.dot(query_vec)
-    ranking = np.argsort(scores)
+    #ranking = np.argsort(scores)
     
-    return [(artist_names[i], scores[i]) for i in ranking[::-1]]
+    #return [(artist_names[i], scores[i]) for i in ranking[::-1]]
+    return scores
 
 def get_rec_artists(query, ling_desc, disliked_artist, artist_name_to_index=artist_name_to_index):
     """ Returns list of recommended artists and their similarity scores 
@@ -130,7 +133,10 @@ def get_rec_artists(query, ling_desc, disliked_artist, artist_name_to_index=arti
     }
     query_vec = rocchio_update(idx, query_obj)
     
-    artist_ranking = list(filter(lambda x: x[0] != query, cosine_similarity(query_vec)))
+    query_vec_genres = normalize(rocchio_update(idx,query_obj,input_doc_mat=jaccard).reshape(1,-1))
+    final_scores = query_vec_genres + cosine_similarity(query_vec)
+    sorted_indices = np.argsort(final_scores)
+    artist_ranking = list(filter(lambda x: x[0] not in query_obj['relevant_artists'],[(artist_names[i], final_scores[i]) for i in sorted_indices[::-1]]))
     return artist_ranking[:10]
 
 def get_results(query, ling_desc, disliked_artist):
