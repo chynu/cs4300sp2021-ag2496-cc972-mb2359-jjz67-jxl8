@@ -169,6 +169,11 @@ def search():
         return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data,\
                                artist_names=all_artist_names,\
                                query_info={"artist_name": query, "ling_desc": ling_desc, "disliked_artist": disliked_artist})
+    elif(query and (query == disliked_artist)): #liked artist and disliked artist are the same
+        output_message = ''
+        return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data,\
+                               artist_names=all_artist_names,\
+                               query_info={"artist_name": query, "ling_desc": ling_desc, "disliked_artist": disliked_artist})
     else:
         output_message = "Since you like " + query + "'s music, we recommend..."
         return render_template('search_results.html', name=project_name, netid=net_id, output_message=output_message, data=data,\

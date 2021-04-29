@@ -6,6 +6,8 @@
 <html>
 
 <head>
+    <title>Similar Singer</title>
+    <link rel="icon" href="/static/img/record_logo.png">
     <link rel="stylesheet" href="/static/style/bootstrap.min.css">
     <link rel="stylesheet" href="/static/style/global.css">
     <link rel="stylesheet" href="/static/style/results.css">
@@ -23,11 +25,13 @@
             <form class="global-search" method="GET" autocomplete="off">
                 <div id="search_fields">
                     <div class="search_item"><input class="search fav_artist" id="input" type="text" name="search"
-                        placeholder="your favorite artist" value="{{query_info['artist_name']}}"></div>
+                            placeholder="your favorite artist" value="{{query_info['artist_name']}}"></div>
                     <div class="search_item"><input class="search ling_desc" id="input" type="text" name="ling_desc"
-                        placeholder="describe a mood, tempo, rhythm, etc." value="{{query_info['ling_desc']}}"></div>
-                    <div class="search_item"><input class="search disliked_artist" id="input" type="text" name="disliked_artist"
-                        placeholder="which artist do you NOT like?" value="{{query_info['disliked_artist']}}"></div>
+                            placeholder="describe a mood, tempo, rhythm, etc." value="{{query_info['ling_desc']}}">
+                    </div>
+                    <div class="search_item"><input class="search disliked_artist" id="input" type="text"
+                            name="disliked_artist" placeholder="which artist do you NOT like?"
+                            value="{{query_info['disliked_artist']}}"></div>
                     <button class="sb_submit" type="submit"> ▶ </button>
                 </div>
             </form>
@@ -75,10 +79,11 @@
 </body>
 <script src="/static/scripts/search_autocomplete.js"></script>
 <script>
-// Instantiating code goes here so that we can make use of Flask templates
-let artists = [{% for artist in artist_names %}'{{artist}}',{% endfor %}""].slice(0,-1);
+    // Instantiating code goes here so that we can make use of Flask templates
+    let artists = [{% for artist in artist_names %}'{{artist}}', {% endfor %}""].slice(0, -1);
 
-initAutoCompleteDropdown(document.getElementsByClassName("fav_artist")[0], artists);
-initAutoCompleteDropdown(document.getElementsByClassName("disliked_artist")[0], artists);
+    initAutoCompleteDropdown(document.getElementsByClassName("fav_artist")[0], artists);
+    initAutoCompleteDropdown(document.getElementsByClassName("disliked_artist")[0], artists);
 </script>
+
 </html>
