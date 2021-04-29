@@ -31,16 +31,16 @@ def get_artist_song_id(artist_name):
     except:
         return "no song"
 
-def get_artist_url(artist_name):
-    """ Returns url of [artist_name]'s profile.
+def get_artist_id(artist_name):
+    """ Returns id of [artist_name]'s profile.
     
     Parameters: {artist_name: String}
     Returns: String
     """
     try:
-        return artist_details['Artist URL'][artist_name_to_index[artist_name]]
+        return artist_details['Artist ID'][artist_name_to_index[artist_name]]
     except:
-        return "no url"
+        return "no id"
     
 def get_artist_description(artist_name):
     """ Returns description of [artist_name].
@@ -53,6 +53,15 @@ def get_artist_description(artist_name):
         return artist_name + " has " + str(followers) + " followers on Spotify."
     except:
         return "Couldn't find additional details on " + artist_name + ". "
+
+def get_artist_genres(artist_name):
+    """ Returns the genres of [artist_name].
+    
+    Parameters: {artist_name: String}
+    Returns: List
+    """
+    genres = artist_details['genres'][artist_name_to_index[artist_name]]
+    return genres.translate(str.maketrans('','','[]\'')).split(', ')
 
 def get_artist_photo(artist_name):
     """ Returns url of [artist_name]'s photo.
@@ -157,8 +166,9 @@ def get_results(query, ling_desc, disliked_artist):
     if (top_rec_artists == []):
         return []
     for artist, score in top_rec_artists:
-        data.append({'artist_name' : artist, 'sim_score' : str(round(score, 2)), \
-                    'description' : get_artist_description(artist), 'img_url' : get_artist_photo(artist)})
+        genres = ", ".join(set(get_artist_genres(artist)) & set(get_artist_genres(query)))
+        data.append({'artist_name' : artist, 'sim_score' : str(round(score, 2)), 'artist_id' : get_artist_id(artist), \
+                    'common_genres' : genres, 'description' : get_artist_description(artist), 'img_url' : get_artist_photo(artist)})
     return data    
 
 @irsystem.route('/', methods=['GET'])

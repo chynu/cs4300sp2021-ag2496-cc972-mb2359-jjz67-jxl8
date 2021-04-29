@@ -67,7 +67,9 @@
                         <div class="right">
                             <h4>{{ d['artist_name'] }}</h4>
                             <p>{{ "Similarity score: " + d['sim_score'] }}</p>
+                            <p>{{ "Genres in common: " + d['common_genres'] }}</p>
                             <p>{{ d['description'] }}</p>
+                            <iframe src={{ "https://open.spotify.com/embed/artist/" + d['artist_id'] }} width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
                         </div>
                     </div>
                     {% endfor %}
