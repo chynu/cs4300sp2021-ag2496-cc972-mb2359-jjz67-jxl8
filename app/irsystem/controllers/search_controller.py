@@ -10,16 +10,11 @@ import ssl
 project_name = "Similar Singer"
 net_id = "Alyssa Gao (ag2496), Celine Choo (cc972), Mahak Bindal (mb2359), Jerilyn Zheng (jjz67), Jasper Liang (jxl8)"
 
-##DATA_DIRECTORY = 'data/processed'
-##NUM_TFIDF_FILES = 5
-##TFIDF_FILE = DATA_DIRECTORY + '/tfidf_mat_compressed.csv'
-##ARTIST_DETAILS_PATH = DATA_DIRECTORY + '/compiled-w-songs_new.csv'
-
 ssl._create_default_https_context = ssl._create_unverified_context
 
 tf_idf = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/data/processed/tfidf_mat_compressed.csv")
 artist_details = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/data/processed/compiled-w-songs_new.csv")
-jaccard = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/scripts/jaccard.csv",index_col=[0]).to_numpy()
+jaccard = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/data/processed/jaccard.csv",index_col=[0]).to_numpy()
 
 artist_names = tf_idf.values[:,0]
 artist_name_to_index = {artist_names[i]: i for i in range(len(artist_names))}
