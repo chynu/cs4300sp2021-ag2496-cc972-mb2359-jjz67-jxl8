@@ -1,5 +1,4 @@
 from helper_functions import *
-
 import json
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -12,6 +11,11 @@ KAGGLE_FILELOC = "../../data/processed/tfidf_mat_compressed.csv"
 
 
 class ArtistReviewLoader:
+    """
+    Loads in raw review data and turns it into a usable JSON.
+
+    When this file is run, it will export into a JSON file in `../../data/processed/artist_reviews.json`.
+    """
     def __init__(self, review_count_threshold=30):
         """
         Initializing a ArtistReviewLoader object will immediately load in all of the artist information,

@@ -9,39 +9,110 @@ import spacy
 
 
 class ArtistReviewAnalyzer:
-    def __init__(self, fileloc, min_df=2, max_df=0.8):
-        self.raw = ArtistReviewAnalyzer.load_json(fileloc)
-        self.artists_list = list(self.raw.keys())
-        # self.tfidf_vectorizer = TfidfVectorizer(analyzer='word', stop_words={'english'}, min_df=min_df, max_df=max_df)
-        self.count_vectorizer = CountVectorizer(analyzer='word', stop_words={'english'}, min_df=min_df, max_df=max_df)
-        self.__tokenizer = self.count_vectorizer.build_tokenizer()
+    """
+    Analyzes artist reviews. Forms into useful data structures for NLP and topic modeling.
+    """
+    def __init__(self):
+        # Basic data
+        self.file_loc = None
+        self.raw = None
+        self.artists_list = None
 
-        self.nlp = spacy.load("en_core_web_sm", disable=['parser', 'ner'])  # Spacy tool
+        # Stop-Words for tokenization
+        self.stop_words = stopwords.words('english')  # Basic stop words
+        self.update_stopwords(['album', 'music', 'cd', 'track', 'song', 'sound'])
 
-        self.tokenized_reviews = self.build_reviews_list(do_tokenize=True)  # List of lists of strings
-        self.stop_words = self.build_stopwords()  # Stop words
-        self.remove_stopwords()
+        # Vectorizers
+        self.tfidf_vectorizer = None
+        self.count_vectorizer = None
+        self.tfidf_matrix = None
+        self.count_matrix = None
+        self.__tokenizer = None
+        self.tokenized_reviews = None
 
-
+        # NLP tools
+        self.lda_model = None
         self.bigrams = None
         self.lemmatized_text = None
-        self.lda_model = self.make_lda_model(num_topics=20)
+        self.nlp = spacy.load("en_core_web_sm", disable=['parser', 'ner'])  # Spacy tool
 
-        # self.tfidf_matrix = self.tfidf_vectorizer.fit_transform(self.raw_reviews)
-        # self.count_matrix = self.count_vectorizer.fit_transform(self.raw_reviews)
-        # self.raw_reviews = self.build_reviews_list()  # List of strings
 
-    def build_stopwords(self):
-        sw = stopwords.words('english')
-        sw.extend(['album', 'music', 'cd', 'track', 'song', 'sound'])
-        return sw
+    def load_data(self, file_loc):
+        """
+        Loads reviews data (JSON file) into a dictionary.
+        """
+        # Save file location
+        self.file_loc = file_loc
+
+        with open(file_loc, 'r') as file:
+            d = json.load(file)
+            file.close()
+        self.raw = d  # Save raw dictionary
+
+        self.artists_list = list(self.raw.keys())  # Save artists list
+
+        self.build_count_vectorizer(2, 0.8)  # Build count vec so we have a tokenizer
+
+        # Handling tokenized list of reviews
+        self.tokenized_reviews = self.__build_reviews_list(do_tokenize=True)
+        self.remove_stopwords_from_tokenized_list()
+
+        return self.raw
+
+    def refresh(self):
+        self.build_count_vectorizer(2, 0.8)
+        self.tokenized_reviews = self.__build_reviews_list(do_tokenize=True)
+        self.remove_stopwords_from_tokenized_list()
+
+    def build_count_vectorizer(self, min_df, max_df):
+        if self.count_vectorizer is not None:
+            print("WARNING: Count vectorizer has already been built.")
+            return self.count_vectorizer
+        self.count_vectorizer = CountVectorizer(analyzer='word', stop_words=self.stop_words, min_df=min_df, max_df=max_df)
+        self.__tokenizer = self.count_vectorizer.build_tokenizer()
+        return self.count_vectorizer
+
+    def get_count_matrix(self):
+        if self.count_vectorizer is None:
+            return None
+
+        if self.count_matrix is None:
+            # TODO: self.raw is not truly reflective of the data since we clean it.
+            self.count_matrix = self.count_vectorizer.fit_transform(self.raw)
+
+    def build_tfidf_vectorizer(self, min_df, max_df):
+        self.tfidf_vectorizer = TfidfVectorizer(analyzer='word', stop_words=self.stop_words, min_df=min_df, max_df=max_df)
+        return self.tfidf_vectorizer
+
+    def get_tfidf_matrix(self):
+        if self.tfidf_vectorizer is None:
+            return None
+
+        if self.tfidf_matrix is None:
+            # TODO: self.raw is not truly reflective of the data since we clean it.
+            self.count_matrix = self.tfidf_vectorizer.fit_transform(self.raw)
+
+    def tokenize(self, input_string):
+        if self.__tokenizer is None:
+            print("WARNING: Tokenizer not set.")
+            return None
+        return self.__tokenizer(input_string)
 
     def update_stopwords(self, word_list):
         self.stop_words.extend(word_list)
         return None
 
-    def remove_stopwords(self):
-        self.tokenized_reviews = [[w for w in artist_review if w not in self.stop_words] for artist_review in self.tokenized_reviews]
+    def remove_stopwords_from_tokenized_list(self):
+        self.tokenized_reviews = \
+            [[w for w in artist_review if w not in self.stop_words] for artist_review in self.tokenized_reviews]
+
+    def build_lda_model(self, num_topics=20):
+        self.bigrams = self.make_bigrams()
+        self.lemmatized_text = self.lemmatize()
+        id2word = corpora.Dictionary(self.lemmatized_text)
+        corpus = [id2word.doc2bow(w) for w in self.lemmatized_text]
+        self.lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus, id2word=id2word, num_topics=num_topics)
+        return self.lda_model
 
     def make_bigrams(self):
         bg = gensim.models.Phrases(self.tokenized_reviews, min_count=5, threshold=100)
@@ -55,17 +126,13 @@ class ArtistReviewAnalyzer:
             texts_out.append([token.lemma_ for token in joined_words if token.pos_ in allowed_postags])
         return texts_out
 
-    def make_lda_model(self, num_topics):
-        self.bigrams = self.make_bigrams()
-        self.lemmatized_text = self.lemmatize()
-        id2word = corpora.Dictionary(self.lemmatized_text)
-        corpus = [id2word.doc2bow(w) for w in self.lemmatized_text]
-        return gensim.models.ldamodel.LdaModel(corpus=corpus, id2word=id2word, num_topics=num_topics)
+    def get_all_words(self, do_tokenize=False):
+        return self.tokenize(" ".join(self.raw)) if do_tokenize else " ".join(self.raw)
 
-    def tokenize(self, input_string):
-        return self.__tokenizer(input_string)
-
-    def build_reviews_list(self, do_tokenize=False):
+    def __build_reviews_list(self, do_tokenize=False):
+        """
+        Builds a list of reviews for each artist.
+        """
         consolidated_reviews = []
         for a in self.artists_list:
             if do_tokenize:
@@ -73,13 +140,3 @@ class ArtistReviewAnalyzer:
             else:
                 consolidated_reviews.append(clean_str(" ".join(self.raw[a])))
         return consolidated_reviews
-
-    def get_all_words(self, do_tokenize=False):
-        return self.tokenize(" ".join(self.raw_reviews)) if do_tokenize else " ".join(self.raw_reviews)
-
-    @staticmethod
-    def load_json(fileloc):
-        with open(fileloc, 'r') as file:
-            d = json.load(file)
-            file.close()
-        return d
