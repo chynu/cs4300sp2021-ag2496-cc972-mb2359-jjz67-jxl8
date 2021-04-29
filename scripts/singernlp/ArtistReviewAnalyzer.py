@@ -37,7 +37,7 @@ class ArtistReviewAnalyzer:
         return sw
 
     def update_stopwords(self, word_list):
-        self.stopwords.extend(word_list)
+        self.stop_words.extend(word_list)
         return None
 
     def remove_stopwords(self):
@@ -60,7 +60,7 @@ class ArtistReviewAnalyzer:
         self.lemmatized_text = self.lemmatize()
         id2word = corpora.Dictionary(self.lemmatized_text)
         corpus = [id2word.doc2bow(w) for w in self.lemmatized_text]
-        return gensim.models.ldamodel.LdaModel(corpus, id2word, num_topics)
+        return gensim.models.ldamodel.LdaModel(corpus=corpus, id2word=id2word, num_topics=num_topics)
 
     def tokenize(self, input_string):
         return self.__tokenizer(input_string)
@@ -69,9 +69,9 @@ class ArtistReviewAnalyzer:
         consolidated_reviews = []
         for a in self.artists_list:
             if do_tokenize:
-                consolidated_reviews.append(self.tokenize(" ".join(self.raw[a])))
+                consolidated_reviews.append(self.tokenize(clean_str(" ".join(self.raw[a]))))
             else:
-                consolidated_reviews.append(" ".join(self.raw[a]))
+                consolidated_reviews.append(clean_str(" ".join(self.raw[a])))
         return consolidated_reviews
 
     def get_all_words(self, do_tokenize=False):
