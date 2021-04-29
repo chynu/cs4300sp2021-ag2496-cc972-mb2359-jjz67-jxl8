@@ -6,6 +6,8 @@ from nltk.corpus import stopwords
 import gensim
 import gensim.corpora as corpora
 import spacy
+import itertools
+import numpy as np
 
 
 class ArtistReviewAnalyzer:
@@ -17,6 +19,7 @@ class ArtistReviewAnalyzer:
         self.file_loc = None
         self.raw = None
         self.artists_list = None
+        self.all_tokens = None
 
         # Stop-Words for tokenization
         self.stop_words = stopwords.words('english')  # Basic stop words
@@ -56,6 +59,7 @@ class ArtistReviewAnalyzer:
         # Handling tokenized list of reviews
         self.tokenized_reviews = self.__build_reviews_list(do_tokenize=True)
         self.remove_stopwords_from_tokenized_list()
+        self.set_all_tokens()  # Get tokenized corpus
 
         return self.raw
 
@@ -63,6 +67,7 @@ class ArtistReviewAnalyzer:
         self.build_count_vectorizer(2, 0.8)
         self.tokenized_reviews = self.__build_reviews_list(do_tokenize=True)
         self.remove_stopwords_from_tokenized_list()
+        self.set_all_tokens()
 
     def build_count_vectorizer(self, min_df, max_df):
         if self.count_vectorizer is not None:
@@ -78,7 +83,8 @@ class ArtistReviewAnalyzer:
 
         if self.count_matrix is None:
             # TODO: self.raw is not truly reflective of the data since we clean it.
-            self.count_matrix = self.count_vectorizer.fit_transform(self.raw)
+            self.count_matrix = self.count_vectorizer.fit_transform(self.all_tokens)
+        return self.count_matrix
 
     def build_tfidf_vectorizer(self, min_df, max_df):
         self.tfidf_vectorizer = TfidfVectorizer(analyzer='word', stop_words=self.stop_words, min_df=min_df, max_df=max_df)
@@ -90,7 +96,8 @@ class ArtistReviewAnalyzer:
 
         if self.tfidf_matrix is None:
             # TODO: self.raw is not truly reflective of the data since we clean it.
-            self.count_matrix = self.tfidf_vectorizer.fit_transform(self.raw)
+            self.tfidf_matrix = self.tfidf_vectorizer.fit_transform(self.all_tokens)
+        return self.tfidf_matrix
 
     def tokenize(self, input_string):
         if self.__tokenizer is None:
@@ -126,12 +133,45 @@ class ArtistReviewAnalyzer:
             texts_out.append([token.lemma_ for token in joined_words if token.pos_ in allowed_postags])
         return texts_out
 
-    def get_all_words(self, do_tokenize=False):
-        return self.tokenize(" ".join(self.raw)) if do_tokenize else " ".join(self.raw)
+    def set_all_tokens(self):
+        self.all_tokens = list(itertools.chain.from_iterable(self.tokenized_reviews))
+        return self.all_tokens
+
+    def get_all_tokens(self):
+        return self.all_tokens
+
+    def get_n_most_frequent_tuples(self, n):
+        top_n = []
+        feats = self.count_vectorizer.get_feature_names()
+        w_counts = np.array(np.sum(self.get_count_matrix(), axis=0))[0]
+        sorted_indices = np.argsort(w_counts)[::-1][:n]
+        for i in sorted_indices:
+            top_n.append((feats[i], w_counts[i]))
+        return top_n
+
+    def get_n_most_frequent(self, n):
+        top_n = []
+        feats = self.count_vectorizer.get_feature_names()
+        w_counts = np.array(np.sum(self.get_count_matrix(), axis=0))[0]
+        sorted_indices = np.argsort(w_counts)[::-1][:n]
+        for i in sorted_indices:
+            top_n.append(feats[i])
+        return top_n
+
+    def get_n_least_frequent(self, n):
+        top_n = []
+        feats = self.count_vectorizer.get_feature_names()
+        w_counts = np.array(np.sum(self.get_count_matrix(), axis=0))[0]
+        sorted_indices = np.argsort(w_counts)[:n]
+        for i in sorted_indices:
+            top_n.append(feats[i])
+        return top_n
 
     def __build_reviews_list(self, do_tokenize=False):
         """
         Builds a list of reviews for each artist.
+        returns {@list<string>} - list of all words used in a review for each artist
+          or {@list<list<string>>} - list of token lists for reviews for each artist
         """
         consolidated_reviews = []
         for a in self.artists_list:
