@@ -132,7 +132,7 @@ def get_rec_artists(query, ling_desc, disliked_artist, artist_name_to_index=arti
                  artist_name_to_index: Dict}
     Returns: List
     """
-    if query not in artist_name_to_index:
+    if (query not in artist_name_to_index) or (disliked_artist and (disliked_artist not in artist_name_to_index)):
         return []
     idx = artist_name_to_index[query]
     
@@ -167,6 +167,7 @@ def get_results(query, ling_desc, disliked_artist):
         return []
     for artist, score in top_rec_artists:
         genres = ", ".join(set(get_artist_genres(artist)) & set(get_artist_genres(query)))
+        genres = 'None.' if genres == '' else genres
         data.append({'artist_name' : artist, 'sim_score' : str(round(score, 2)), 'artist_id' : get_artist_id(artist), \
                     'common_genres' : genres, 'description' : get_artist_description(artist), 'img_url' : get_artist_photo(artist)})
     return data    
@@ -180,16 +181,11 @@ def search():
     data = get_results(query, ling_desc, disliked_artist)
     all_artist_names = [s.replace('\'', '').replace('\"', '') for s in artist_names]
 
-    if (not query):       # empty query
+    if ((not query) and (not ling_desc) and (not disliked_artist)):       # empty query
         output_message = ''
         return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data,\
                                artist_names=all_artist_names)
-    elif (data == []):    # query returned no results
-        output_message = ''
-        return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data,\
-                               artist_names=all_artist_names,\
-                               query_info={"artist_name": query, "ling_desc": ling_desc, "disliked_artist": disliked_artist})
-    elif(query and (query == disliked_artist)): #liked artist and disliked artist are the same
+    elif ((data == []) or (query == disliked_artist)):    # query returned no results, or liked artist and disliked artist are the same
         output_message = ''
         return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data,\
                                artist_names=all_artist_names,\
