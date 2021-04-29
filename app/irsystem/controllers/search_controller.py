@@ -1,39 +1,50 @@
 from . import *  
 from app.irsystem.models.helpers import *
 from app.irsystem.models.helpers import NumpyEncoder as NumpyEncoder
+# TODO: Import when SingerNLP package is ready
+# from app.irsystem.models.singernlp.ArtistReviewLoader import ArtistReviewLoader
+
+from sklearn.preprocessing import normalize
 import pandas as pd
 import numpy as np
 import zipfile
-# TODO: Import when SingerNLP package is ready
-# from app.irsystem.models.singernlp.ArtistReviewLoader import ArtistReviewLoader
+import ssl
 
 project_name = "Similar Singer"
 net_id = "Alyssa Gao (ag2496), Celine Choo (cc972), Mahak Bindal (mb2359), Jerilyn Zheng (jjz67), Jasper Liang (jxl8)"
 
-##DATA_DIRECTORY = 'data/processed'
-##NUM_TFIDF_FILES = 5
-##TFIDF_FILE = DATA_DIRECTORY + '/tfidf_mat_compressed.csv'
-##ARTIST_DETAILS_PATH = DATA_DIRECTORY + '/compiled-w-songs_new.csv'
+ssl._create_default_https_context = ssl._create_unverified_context
 
 tf_idf = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/data/processed/tfidf_mat_compressed.csv")
-artist_details = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/data/processed/compiled-w-songs_new.csv")
+artist_details = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/removed_dups_new.csv")
+jaccard = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/data/processed/jaccard.csv",index_col=[0]).to_numpy()
 
 artist_names = tf_idf.values[:,0]
 artist_name_to_index = {artist_names[i]: i for i in range(len(artist_names))}
 matrix = tf_idf.to_numpy()[:,1:]
 
-def find_artist(artist_name, csv):
-    """ Returns index of [artist_name].
+def get_artist_song_id(artist_name):
+    """ Returns song id of [artist_name].
     
     Parameters: {artist_name: String}
-    Returns: Int
+    Returns: String
     """
-    col = 1 if (csv.values[0, 0] == 0) else 0 # checking which column contains the list of artists
     try:
-        return np.argwhere(csv.values[:, col] == artist_name)[0][0]
+        return artist_details['Song ID'][artist_name_to_index[artist_name]]
     except:
-        return -1
+        return "no song"
 
+def get_artist_url(artist_name):
+    """ Returns url of [artist_name]'s profile.
+    
+    Parameters: {artist_name: String}
+    Returns: String
+    """
+    try:
+        return artist_details['Artist URL'][artist_name_to_index[artist_name]]
+    except:
+        return "no url"
+    
 def get_artist_description(artist_name):
     """ Returns description of [artist_name].
     
@@ -41,7 +52,7 @@ def get_artist_description(artist_name):
     Returns: String
     """
     try:
-        followers = artist_details['followers'][find_artist(artist_name, artist_details)]
+        followers = artist_details['followers'][artist_name_to_index[artist_name]]
         return artist_name + " has " + str(followers) + " followers on Spotify."
     except:
         return "Couldn't find additional details on " + artist_name + ". "
@@ -53,7 +64,7 @@ def get_artist_photo(artist_name):
     Returns: String
     """
     try:
-        return artist_details['Image URL'][find_artist(artist_name, artist_details)]
+        return artist_details['Image URL'][artist_name_to_index[artist_name]]
     except:
         return "https://www.pngitem.com/pimgs/m/148-1487614_spotify-logo-small-spotify-logo-transparent-hd-png.png"
 
@@ -94,20 +105,16 @@ def rocchio_update(query, query_obj, input_doc_mat=matrix, \
         
     return np.clip(rocchio, 0, None)
 
-def cosine_similarity(query_vec, tfidf_mat=matrix, artist_names=artist_names):
-    """ Returns ranking of artist names and their similarity score
-        using cosine similarity with query_vec.
+def cosine_similarity(query_vec, tfidf_mat=matrix):
+    """ Returns numpy array of each artist's cosine similarity score with [query_vec]
     
     Params: {query_vec: np.ndarray - (k,)
              tfidf_mat: np.ndarray - d x k (where d is number of documents/artists,
                 and rows are normalized)
-             artist_names: List}
-    Returns: List
+    Returns: np.ndarray
     """
     scores = tfidf_mat.dot(query_vec)
-    ranking = np.argsort(scores)
-    
-    return [(artist_names[i], scores[i]) for i in ranking[::-1]]
+    return scores
 
 def get_rec_artists(query, ling_desc, disliked_artist, artist_name_to_index=artist_name_to_index):
     """ Returns list of recommended artists and their similarity scores 
@@ -129,7 +136,14 @@ def get_rec_artists(query, ling_desc, disliked_artist, artist_name_to_index=arti
     }
     query_vec = rocchio_update(idx, query_obj)
     
-    artist_ranking = list(filter(lambda x: x[0] != query, cosine_similarity(query_vec)))
+    cosine_scores = cosine_similarity(query_vec)
+    jaccard_scores = rocchio_update(idx,query_obj,input_doc_mat=jaccard)
+    final_scores = (jaccard_scores[:,np.newaxis] + cosine_scores[:,np.newaxis]).flatten()
+#    print(cosine_scores[:5], normalize(cosine_scores[:5, np.newaxis]), jaccard_scores[:5], normalize(jaccard_scores[:5, np.newaxis]), final_scores[:5])
+    
+    sorted_indices = np.argsort(final_scores)
+    rankings = [(artist_names[i], final_scores[i]) for i in sorted_indices[::-1]]
+    artist_ranking = list(filter(lambda x: x[0] not in query_obj['relevant_artists'], rankings))
     return artist_ranking[:10]
 
 def get_results(query, ling_desc, disliked_artist):
@@ -164,6 +178,11 @@ def search():
         return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data,\
                                artist_names=all_artist_names)
     elif (data == []):    # query returned no results
+        output_message = ''
+        return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data,\
+                               artist_names=all_artist_names,\
+                               query_info={"artist_name": query, "ling_desc": ling_desc, "disliked_artist": disliked_artist})
+    elif(query and (query == disliked_artist)): #liked artist and disliked artist are the same
         output_message = ''
         return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data,\
                                artist_names=all_artist_names,\
