@@ -14,4 +14,3 @@ vagrant/a4keypair.pem
 .python-version
 data/raw/mard_reviews/**
 scripts/.ipynb_checkpoints/
-unidecode==1.2.0
