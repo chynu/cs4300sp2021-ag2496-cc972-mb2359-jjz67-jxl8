@@ -92,20 +92,15 @@ def rocchio_update(query, query_obj, input_doc_mat=matrix, \
         
     return np.clip(rocchio, 0, None)
 
-def cosine_similarity(query_vec, tfidf_mat=matrix, artist_names=artist_names):
-    """ Returns ranking of artist names and their similarity score
-        using cosine similarity with query_vec.
+def cosine_similarity(query_vec, tfidf_mat=matrix):
+    """ Returns numpy array of each artist's cosine similarity score with [query_vec]
     
     Params: {query_vec: np.ndarray - (k,)
              tfidf_mat: np.ndarray - d x k (where d is number of documents/artists,
                 and rows are normalized)
-             artist_names: List}
-    Returns: List
+    Returns: np.ndarray
     """
     scores = tfidf_mat.dot(query_vec)
-    #ranking = np.argsort(scores)
-    
-    #return [(artist_names[i], scores[i]) for i in ranking[::-1]]
     return scores
 
 def get_rec_artists(query, ling_desc, disliked_artist, artist_name_to_index=artist_name_to_index):
@@ -128,10 +123,14 @@ def get_rec_artists(query, ling_desc, disliked_artist, artist_name_to_index=arti
     }
     query_vec = rocchio_update(idx, query_obj)
     
-    query_vec_genres = normalize(rocchio_update(idx,query_obj,input_doc_mat=jaccard).reshape(1,-1))
-    final_scores = query_vec_genres + cosine_similarity(query_vec)
+    cosine_scores = cosine_similarity(query_vec)
+    jaccard_scores = rocchio_update(idx,query_obj,input_doc_mat=jaccard)
+    final_scores = (jaccard_scores[:,np.newaxis] + cosine_scores[:,np.newaxis]).flatten()
+#    print(cosine_scores[:5], normalize(cosine_scores[:5, np.newaxis]), jaccard_scores[:5], normalize(jaccard_scores[:5, np.newaxis]), final_scores[:5])
+    
     sorted_indices = np.argsort(final_scores)
-    artist_ranking = list(filter(lambda x: x[0] not in query_obj['relevant_artists'],[(artist_names[i], final_scores[i]) for i in sorted_indices[::-1]]))
+    rankings = [(artist_names[i], final_scores[i]) for i in sorted_indices[::-1]]
+    artist_ranking = list(filter(lambda x: x[0] not in query_obj['relevant_artists'], rankings))
     return artist_ranking[:10]
 
 def get_results(query, ling_desc, disliked_artist):
