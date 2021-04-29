@@ -1,7 +1,6 @@
 from . import *  
 from app.irsystem.models.helpers import *
 from app.irsystem.models.helpers import NumpyEncoder as NumpyEncoder
-from sklearn.preprocessing import normalize
 import pandas as pd
 import numpy as np
 import zipfile
@@ -42,6 +41,14 @@ def get_artist_id(artist_name):
     except:
         return "no id"
     
+def get_artist_follower_count(artist_name):
+    """ Returns follower count of [artist_name].
+    
+    Parameters: {artist_name: String}
+    Returns: String
+    """
+    return artist_details['followers'][artist_name_to_index[artist_name]]
+
 def get_artist_description(artist_name):
     """ Returns description of [artist_name].
     
@@ -49,7 +56,7 @@ def get_artist_description(artist_name):
     Returns: String
     """
     try:
-        followers = artist_details['followers'][artist_name_to_index[artist_name]]
+        followers = get_artist_follower_count(artist_name)
         return artist_name + " has " + str(followers) + " followers on Spotify."
     except:
         return "Couldn't find additional details on " + artist_name + ". "
@@ -122,6 +129,28 @@ def cosine_similarity(query_vec, tfidf_mat=matrix):
     scores = tfidf_mat.dot(query_vec)
     return scores
 
+def get_filter_function(name, rel_artists, avg_followers, percentage=0.5):
+    """ Returns True if [name] has more followers than [percentage] * [avg_followers]
+        and [name] is not part of user input ([rel_artists]).
+    
+    Parameters: {name: String
+                 rel_artists: List
+                 avg_followers: Float
+                 percentage: Float}
+    Returns: Boolean
+    """
+    follower_threshold = avg_followers * percentage
+    return name not in rel_artists and get_artist_follower_count(name) > follower_threshold
+
+def minmax_scale(vec):
+    """ Returns min/max scale of [vec].
+    
+    Parameters: {vec: np.ndarray}
+    Returns: np.ndarray
+    """
+    min = np.min(vec)
+    return (vec-min) / (np.max(vec) - min)
+
 def get_rec_artists(query, ling_desc, disliked_artist, artist_name_to_index=artist_name_to_index):
     """ Returns list of recommended artists and their similarity scores 
         that are similar to [query] and dissimilar to [disliked_artist].
@@ -142,14 +171,16 @@ def get_rec_artists(query, ling_desc, disliked_artist, artist_name_to_index=arti
     }
     query_vec = rocchio_update(idx, query_obj)
     
-    cosine_scores = cosine_similarity(query_vec)
-    jaccard_scores = rocchio_update(idx,query_obj,input_doc_mat=jaccard)
-    final_scores = (jaccard_scores[:,np.newaxis] + cosine_scores[:,np.newaxis]).flatten()
-#    print(cosine_scores[:5], normalize(cosine_scores[:5, np.newaxis]), jaccard_scores[:5], normalize(jaccard_scores[:5, np.newaxis]), final_scores[:5])
+    cosine_scores = minmax_scale(cosine_similarity(query_vec))
+    jaccard_scores = minmax_scale(rocchio_update(idx,query_obj,input_doc_mat=jaccard))
+    
+    final_scores = cosine_scores + jaccard_scores
     
     sorted_indices = np.argsort(final_scores)
     rankings = [(artist_names[i], final_scores[i]) for i in sorted_indices[::-1]]
-    artist_ranking = list(filter(lambda x: x[0] not in query_obj['relevant_artists'], rankings))
+    
+    average_followers = np.array([get_artist_follower_count(name) for name in query_obj['relevant_artists']]).mean()
+    artist_ranking = list(filter(lambda x: get_filter_function(x[0], query_obj['relevant_artists'], average_followers), rankings))
     return artist_ranking[:10]
 
 def get_results(query, ling_desc, disliked_artist):
