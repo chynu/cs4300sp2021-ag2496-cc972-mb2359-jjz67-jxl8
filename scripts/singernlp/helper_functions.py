@@ -7,7 +7,7 @@ import re
 import unidecode as ud
 
 
-def clean_str(input_artist, cap_code=0):
+def clean_str(input_artist, cap_code=0, opt_replacements=None):
     """
     Takes in string, returns a unicode-friendly and stripped version of the string.
     """
@@ -18,6 +18,8 @@ def clean_str(input_artist, cap_code=0):
                    (r'\s+', ' '),  # Remove double spaces
                    (r'[\n|\r|\t|\0]+', ' ')
                    ]
+    if opt_replacements is not None:
+        repl_tuples.extend(opt_replacements)
     for ptn, repl_str in repl_tuples:
         return_artist_str = re.sub(ptn, repl_str, return_artist_str)
 

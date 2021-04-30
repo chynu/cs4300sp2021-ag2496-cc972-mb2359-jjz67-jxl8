@@ -13,8 +13,6 @@ KAGGLE_FILELOC = "../../data/processed/tfidf_mat_compressed.csv"
 class ArtistReviewLoader:
     """
     Loads in raw review data and turns it into a usable JSON.
-
-    When this file is run, it will export into a JSON file in `../../data/processed/artist_reviews.json`.
     """
     def __init__(self, review_count_threshold=30):
         """
@@ -29,10 +27,12 @@ class ArtistReviewLoader:
         self.ARTIST_TO_INDEX = {a: i for i, a in enumerate(self.ALL_ARTISTS)}
 
         # Pandas DataFrame of all reviews
-        self.reviews_df = pd.concat([self.get_pf_reviews_df(), self.get_mard_reviews_df()]).drop(columns=["score"])
+        self.reviews_df = self.get_pf_reviews_df()
+        # pd.concat([self.get_pf_reviews_df(), self.get_mard_reviews_df()]).drop(columns=["score"])
 
         # Dictionary of artist(str) -> reviews(list(str))
-        self.artist_to_reviews = ArtistReviewLoader.process_reviews(self.ALL_ARTISTS, self.reviews_df, review_count_threshold)
+        self.artist_to_reviews = \
+            ArtistReviewLoader.process_reviews(self.ALL_ARTISTS, self.reviews_df, review_count_threshold)
 
         # TFIDF Vectorizer of all artists and their reviews
         self.tfidf = ArtistReviewLoader.make_tfidf(self.artist_to_reviews, self.ALL_ARTISTS)
@@ -94,10 +94,11 @@ class ArtistReviewLoader:
         """
         Returns a list of artists that exist in Kaggle but also have reviews.
         """
-        mard_artists = set(ArtistReviewLoader.load_mard())
+        # mard_artists = set(ArtistReviewLoader.load_mard())
         pitchfork_artists = set(ArtistReviewLoader.load_pf())
         kaggle_artists = set(ArtistReviewLoader.load_kaggle())
-        return kaggle_artists.intersection(pitchfork_artists.union(mard_artists))
+        # return kaggle_artists.intersection(pitchfork_artists.union(mard_artists))
+        return kaggle_artists.intersection(pitchfork_artists)
 
     @staticmethod
     def process_reviews(input_artist_list, input_dataframe, max_reviews):
@@ -171,10 +172,15 @@ class ArtistReviewLoader:
             consolidated_reviews.append(" ".join(input_artist_to_reviews[a]))
         return vectorizer.fit_transform(consolidated_reviews)
 
+    def export_to_json(self, filename):
+        with open('../../data/processed/' + filename + '.json', 'x') as outfile:
+            json.dump(self.get_artist_to_reviews_dict(), outfile)
+            outfile.close()
+
+
 if __name__ == "__main__":
     # Export Reviews into JSON
     print("============ STARTING SCRIPT ============")
-    artist_data = ArtistReviewLoader()
-    with open('../../data/processed/artist_reviews.json', 'w') as outfile:
-        json.dump(artist_data.get_artist_to_reviews_dict(), outfile)
-        outfile.close()
+    pf_artist_data = ArtistReviewLoader(review_count_threshold=50)
+    # pf_artist_data.export_to_json('artist_reviews_pf_only')
+    print(len(pf_artist_data.ALL_ARTISTS))
