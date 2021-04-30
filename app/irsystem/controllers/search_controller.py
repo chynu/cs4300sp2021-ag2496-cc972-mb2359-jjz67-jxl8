@@ -176,7 +176,7 @@ def get_rec_artists(query, ling_desc, disliked_artist, artist_name_to_index=arti
     
     cosine_scores = minmax_scale(cosine_similarity(query_vec))
     jaccard_scores = minmax_scale(rocchio_update(idx,query_obj,input_doc_mat=jaccard))
-    ling_scores = 0*ling_similarity(ling_desc)  # There are some NaN problems probably from minmax .... swetas ...
+    ling_scores = ling_similarity(ling_desc)  # There are some NaN problems probably from minmax .... swetas ...
     
     final_scores = cosine_scores + jaccard_scores + ling_scores
     
