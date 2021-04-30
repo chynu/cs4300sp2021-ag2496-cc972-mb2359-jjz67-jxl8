@@ -34,17 +34,25 @@ def get_artist_song_id(artist_name):
     except:
         return "no song"
 
-def get_artist_url(artist_name):
-    """ Returns url of [artist_name]'s profile.
+def get_artist_id(artist_name):
+    """ Returns id of [artist_name]'s profile.
     
     Parameters: {artist_name: String}
     Returns: String
     """
     try:
-        return artist_details['Artist URL'][artist_name_to_index[artist_name]]
+        return artist_details['Artist ID'][artist_name_to_index[artist_name]]
     except:
-        return "no url"
+        return "no id"
     
+def get_artist_follower_count(artist_name):
+    """ Returns follower count of [artist_name].
+    
+    Parameters: {artist_name: String}
+    Returns: String
+    """
+    return artist_details['followers'][artist_name_to_index[artist_name]]
+
 def get_artist_description(artist_name):
     """ Returns description of [artist_name].
     
@@ -52,10 +60,19 @@ def get_artist_description(artist_name):
     Returns: String
     """
     try:
-        followers = artist_details['followers'][artist_name_to_index[artist_name]]
+        followers = get_artist_follower_count(artist_name)
         return artist_name + " has " + str(followers) + " followers on Spotify."
     except:
         return "Couldn't find additional details on " + artist_name + ". "
+
+def get_artist_genres(artist_name):
+    """ Returns the genres of [artist_name].
+    
+    Parameters: {artist_name: String}
+    Returns: List
+    """
+    genres = artist_details['genres'][artist_name_to_index[artist_name]]
+    return genres.translate(str.maketrans('','','[]\'')).split(', ')
 
 def get_artist_photo(artist_name):
     """ Returns url of [artist_name]'s photo.
@@ -116,6 +133,28 @@ def cosine_similarity(query_vec, tfidf_mat=matrix):
     scores = tfidf_mat.dot(query_vec)
     return scores
 
+def get_filter_function(name, rel_artists, avg_followers, percentage=0.5):
+    """ Returns True if [name] has more followers than [percentage] * [avg_followers]
+        and [name] is not part of user input ([rel_artists]).
+    
+    Parameters: {name: String
+                 rel_artists: List
+                 avg_followers: Float
+                 percentage: Float}
+    Returns: Boolean
+    """
+    follower_threshold = avg_followers * percentage
+    return name not in rel_artists and get_artist_follower_count(name) > follower_threshold
+
+def minmax_scale(vec):
+    """ Returns min/max scale of [vec].
+    
+    Parameters: {vec: np.ndarray}
+    Returns: np.ndarray
+    """
+    min = np.min(vec)
+    return (vec-min) / (np.max(vec) - min)
+
 def get_rec_artists(query, ling_desc, disliked_artist, artist_name_to_index=artist_name_to_index):
     """ Returns list of recommended artists and their similarity scores 
         that are similar to [query] and dissimilar to [disliked_artist].
@@ -126,7 +165,7 @@ def get_rec_artists(query, ling_desc, disliked_artist, artist_name_to_index=arti
                  artist_name_to_index: Dict}
     Returns: List
     """
-    if query not in artist_name_to_index:
+    if (query not in artist_name_to_index) or (disliked_artist and (disliked_artist not in artist_name_to_index)):
         return []
     idx = artist_name_to_index[query]
     
@@ -136,14 +175,16 @@ def get_rec_artists(query, ling_desc, disliked_artist, artist_name_to_index=arti
     }
     query_vec = rocchio_update(idx, query_obj)
     
-    cosine_scores = cosine_similarity(query_vec)
-    jaccard_scores = rocchio_update(idx,query_obj,input_doc_mat=jaccard)
-    final_scores = (jaccard_scores[:,np.newaxis] + cosine_scores[:,np.newaxis]).flatten()
-#    print(cosine_scores[:5], normalize(cosine_scores[:5, np.newaxis]), jaccard_scores[:5], normalize(jaccard_scores[:5, np.newaxis]), final_scores[:5])
+    cosine_scores = minmax_scale(cosine_similarity(query_vec))
+    jaccard_scores = minmax_scale(rocchio_update(idx,query_obj,input_doc_mat=jaccard))
+    
+    final_scores = cosine_scores + jaccard_scores
     
     sorted_indices = np.argsort(final_scores)
     rankings = [(artist_names[i], final_scores[i]) for i in sorted_indices[::-1]]
-    artist_ranking = list(filter(lambda x: x[0] not in query_obj['relevant_artists'], rankings))
+    
+    average_followers = np.array([get_artist_follower_count(name) for name in query_obj['relevant_artists']]).mean()
+    artist_ranking = list(filter(lambda x: get_filter_function(x[0], query_obj['relevant_artists'], average_followers), rankings))
     return artist_ranking[:10]
 
 def get_results(query, ling_desc, disliked_artist):
@@ -160,8 +201,10 @@ def get_results(query, ling_desc, disliked_artist):
     if (top_rec_artists == []):
         return []
     for artist, score in top_rec_artists:
-        data.append({'artist_name' : artist, 'sim_score' : str(round(score, 2)), \
-                    'description' : get_artist_description(artist), 'img_url' : get_artist_photo(artist)})
+        genres = ", ".join(set(get_artist_genres(artist)) & set(get_artist_genres(query)))
+        genres = 'None.' if genres == '' else genres
+        data.append({'artist_name' : artist, 'sim_score' : str(round(score, 2)), 'artist_id' : get_artist_id(artist), \
+                    'common_genres' : genres, 'description' : get_artist_description(artist), 'img_url' : get_artist_photo(artist)})
     return data    
 
 @irsystem.route('/', methods=['GET'])
@@ -173,16 +216,11 @@ def search():
     data = get_results(query, ling_desc, disliked_artist)
     all_artist_names = [s.replace('\'', '').replace('\"', '') for s in artist_names]
 
-    if (not query):       # empty query
+    if ((not query) and (not ling_desc) and (not disliked_artist)):       # empty query
         output_message = ''
         return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data,\
                                artist_names=all_artist_names)
-    elif (data == []):    # query returned no results
-        output_message = ''
-        return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data,\
-                               artist_names=all_artist_names,\
-                               query_info={"artist_name": query, "ling_desc": ling_desc, "disliked_artist": disliked_artist})
-    elif(query and (query == disliked_artist)): #liked artist and disliked artist are the same
+    elif ((data == []) or (query == disliked_artist)):    # query returned no results, or liked artist and disliked artist are the same
         output_message = ''
         return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data,\
                                artist_names=all_artist_names,\
