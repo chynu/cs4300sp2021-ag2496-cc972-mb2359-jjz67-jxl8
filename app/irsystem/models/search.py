@@ -1,6 +1,5 @@
 import numpy as np
 import pickle
-import gensim
 import gensim.corpora as corpora
 import os
 import spacy

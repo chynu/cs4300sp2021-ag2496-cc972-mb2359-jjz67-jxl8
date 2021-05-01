@@ -1,12 +1,8 @@
-from . import *  
-from app.irsystem.models.helpers import *
-from app.irsystem.models.helpers import NumpyEncoder as NumpyEncoder
+from . import *
 from app.irsystem.models.search import *
 
-from sklearn.preprocessing import normalize
 import pandas as pd
 import numpy as np
-import zipfile
 import ssl
 
 project_name = "Similar Singer"
