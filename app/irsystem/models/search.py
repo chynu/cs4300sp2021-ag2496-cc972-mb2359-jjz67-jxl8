@@ -5,7 +5,7 @@ import os
 import spacy
 import unidecode as ud
 import re
-singernlp = spacy.load("en_core_web_trf", disable=['parser', 'ner'])
+singernlp = spacy.load("en_core_web_sm", disable=['parser', 'ner'])
 
 
 def ling_similarity(input_string):
