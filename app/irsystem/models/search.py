@@ -2,10 +2,9 @@ import numpy as np
 import pickle
 import gensim.corpora as corpora
 import os
-import spacy
+# import spacy
 import unidecode as ud
 import re
-singernlp = spacy.load("en_core_web_sm", disable=['parser', 'ner'])
 
 
 def ling_similarity(input_string):
@@ -61,6 +60,7 @@ def unpickle(filename):
 
 
 # ===== LOAD VARIABLES ===== #
+singernlp = unpickle("singernlp.pk")  # spacy.load("en_core_web_sm", disable=['parser', 'ner'])
 lda_model = unpickle("draft_lda_model.pk")
 tokenized_reviews = unpickle("draft_tokenized_reviews.pk")
 topic_matrix = unpickle("draft_topic_matrix.pk")  # shape: (num artists) x (num topics)
