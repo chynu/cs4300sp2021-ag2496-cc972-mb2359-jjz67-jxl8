@@ -19,17 +19,6 @@ artist_names = tf_idf.values[:,0]
 artist_name_to_index = {artist_names[i]: i for i in range(len(artist_names))}
 matrix = tf_idf.to_numpy()[:,1:]
 
-def get_artist_song_id(artist_name):
-    """ Returns song id of [artist_name].
-    
-    Parameters: {artist_name: String}
-    Returns: String
-    """
-    try:
-        return artist_details['Song ID'][artist_name_to_index[artist_name]]
-    except:
-        return "no song"
-
 def get_artist_id(artist_name):
     """ Returns id of [artist_name]'s profile.
     
