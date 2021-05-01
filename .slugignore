@@ -1,3 +1,4 @@
-/data
-/scripts
+data/
+scripts/
 removed_dups_new.csv
+venv/
