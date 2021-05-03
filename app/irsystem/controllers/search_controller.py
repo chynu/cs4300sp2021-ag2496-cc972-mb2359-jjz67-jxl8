@@ -4,6 +4,8 @@ from app.irsystem.models.search import *
 import pandas as pd
 import numpy as np
 import ssl
+import requests
+import json
 
 project_name = "Similar Singer"
 net_id = "Alyssa Gao (ag2496), Celine Choo (cc972), Mahak Bindal (mb2359), Jerilyn Zheng (jjz67), Jasper Liang (jxl8)"
@@ -14,9 +16,27 @@ tf_idf = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag249
 artist_details = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/removed_dups_new.csv")
 jaccard = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/data/processed/jaccard.csv",index_col=[0]).to_numpy()
 
+reviews1 = json.loads(requests.get("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/scripts/ratings_0-803.json").text)
+reviews2 = json.loads(requests.get("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/scripts/ratings_804_1606.json").text)
+reviews3 = json.loads(requests.get("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/scripts/ratings_1607_2409.json").text)
+reviews4 = json.loads(requests.get("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/scripts/ratings_2410_3212.json").text)
+reviews5 = json.loads(requests.get("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/scripts/ratings_3213-4013.json").text)
+reviews = {**reviews1, **reviews2, **reviews3, **reviews4, **reviews5}
+
 artist_names = tf_idf.values[:,0]
 artist_name_to_index = {artist_names[i]: i for i in range(len(artist_names))}
 matrix = tf_idf.to_numpy()[:,1:]
+
+def get_artist_rating(artist_name):
+    """ Returns rating of [artist_name], 'not found' if rating DNE.
+
+    Parameters: {artist_name: String}
+    Returns: Integer | String
+    """
+    try:
+        return reviews[artist_name]
+    except:
+        return 'not found'
 
 def get_artist_id(artist_name):
     """ Returns id of [artist_name]'s profile.
@@ -188,8 +208,15 @@ def get_results(query, ling_desc, disliked_artist):
     for artist, score in top_rec_artists:
         genres = ", ".join(set(get_artist_genres(artist)) & set(get_artist_genres(query)))
         genres = 'None.' if genres == '' else genres
-        data.append({'artist_name' : artist, 'sim_score' : str(round(score, 2)), 'artist_id' : get_artist_id(artist), \
-                    'common_genres' : genres, 'description' : get_artist_description(artist), 'img_url' : get_artist_photo(artist)})
+        data.append({
+            'artist_name' : artist,
+            'sim_score' : str(round(score, 2)),
+            'artist_id' : get_artist_id(artist),
+            'common_genres' : genres,
+            'description' : get_artist_description(artist),
+            'img_url' : get_artist_photo(artist),
+            'rating' : str(get_artist_rating(artist))
+        })
     return data    
 
 @irsystem.route('/', methods=['GET'])
