@@ -67,7 +67,9 @@
                         <div class="right">
                             <h4>{{ d['artist_name'] }}</h4>
                             <p>{{ d['sim_score'] + " confidence" }}</p>
+                            {% if d['rating'] != 'not found' %}
                             <p>{{ "Pitchfork average rating: " + d['rating'] }}</p>
+                            {% endif %}
                             <p>{{ "Genres in common: " + d['common_genres'] }}</p>
                             <p>{{ d['description'] }}</p>
                             <iframe src={{ "https://open.spotify.com/embed/artist/" + d['artist_id'] }} width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>

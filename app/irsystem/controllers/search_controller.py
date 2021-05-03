@@ -137,7 +137,7 @@ def cosine_similarity(query_vec, tfidf_mat=matrix):
     scores = tfidf_mat.dot(query_vec)
     return scores
 
-def get_filter_function(name, rel_artists, irrel_artists, avg_followers, percentage=0.5):
+def get_filter_function(name, rel_artists, irrel_artists, avg_followers, percentage=0.2):
     """ Returns True if [name] has more followers than [percentage] * [avg_followers]
         and [name] is not part of user input ([rel_artists]).
     
@@ -184,8 +184,8 @@ def get_rec_artists(query, ling_desc, disliked_artist, artist_name_to_index=arti
     jaccard_scores = minmax_scale(rocchio_update(idx,query_obj,input_doc_mat=jaccard))
     ling_scores = ling_similarity(ling_desc)
     
-    final_scores = cosine_scores + jaccard_scores + ling_scores
-    final_scores /= 3 if ling_desc else 2
+    final_scores = cosine_scores + 2 * jaccard_scores + ling_scores
+    final_scores /= 4 if ling_desc else 3
     
     sorted_indices = np.argsort(final_scores)
     rankings = [(artist_names[i], final_scores[i]) for i in sorted_indices[::-1]]
