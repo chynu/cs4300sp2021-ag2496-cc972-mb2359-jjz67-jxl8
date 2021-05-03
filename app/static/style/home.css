@@ -5,20 +5,102 @@
  * main search page. If elements may be used in other pages, please add to global.css instead.
  */
 
-/* Heading/Logo Elements */
-#searchbox.centered {
-    padding: 20px;
-    margin: calc(50vh - 130px) 20%;
-    border-radius: 200px;
-    height: 260px;
-}
-#searchbox .record_icon {
-    width: 200px;
-    height: auto;
-    margin: 10px;
-}
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
+/* Heading/Logo Elements */
+@media (min-width: 1620px) {
+    /* Long oval */
+    #searchbox.centered {
+        height: 260px;
+        margin: calc(50vh - 130px) 20%;
+        border-radius: 200px;
+        padding: 20px;
+    }
+    #searchbox.centered input.search,
+    #searchbox.centered .autocomplete-items {
+        width: calc((max(60vw,650px) - 400px)/3 - 10px);
+    }
+    #searchbox .record_icon {
+        width: 200px;
+        height: auto;
+        margin: 10px;
+    }
+}
+@media (max-width: 1619px) {
+    /* Rounded rectangle */
+    #searchbox.centered {
+        height: 380px;
+        margin: calc(50vh - 190px) 20%;
+        border-radius: 50px;
+        padding: 20px;
+    }
+    #searchbox.centered input.search,
+    #searchbox.centered .autocomplete-items {
+        width: calc(max(60vw,650px) - 400px);
+    }
+    #searchbox .record_icon {
+        width: 200px;
+        height: auto;
+        margin: 70px 10px 0 20px;
+    }
+}
+@media (max-width: 1233px) {
+    #searchbox.centered .sb_right .title a {
+        font-size: 40px;
+    }
+}
+#searchbox.centered {
+    transition: height 0.1s;
+}
+#searchbox.centered .sb_right {
+    max-width: calc(max(60vw,650px) - 120px);
+}
 #searchbox .title {
     margin-bottom: 20px;
     margin-top: 40px;
+}
+#searchbox.centered input.search,
+#searchbox.centered .global-search .sb_submit {
+    margin-bottom: 10px;
+}
+#searchbox.centered .global-search .sb_submit {
+}
+
+#about_hover {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    margin: 0; padding: 0;
+    height: 50px;
+
+    transform: translate(0, 30px);
+    -ms-transform: translate(0, 30px);
+    transition: 300ms ease-in;
+}
+#about_hover:hover {
+    transform: translate(0, -25px);
+    -ms-transform: translate(0, -25px);
+    transition: 300ms ease-in;
+}
+#about_hover .abt-icon {
+    margin: 0;
+    padding: 10px;
+    width: 45px;
+    background: #c4cfcf;
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
+    cursor: crosshair;
+}
+#about_hover .abt-icon .material-icons {
+    color: #7a7a7a;
+}
+#about_hover .extra {
+    padding: 10px;
+    color: #7a7a7a;
+    font-size: 11px;
+    background: #c4cfcf;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-top-right-radius: 20px;
+    width: auto;
 }

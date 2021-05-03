@@ -97,23 +97,28 @@ h4 {
 /* ===== Search Input Elements ===== */
 #search_fields {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: flex-start;
 }
 .search_item {
     padding: 0;
     margin: 0;
+    position: relative;
 }
 input.search {
     /* Matches all search input boxes */
     padding: 15px;
     background: #e3e3e3;
-    border: none;
+    border: 1px solid #d4d4d4;
     outline: 0px;
     width: 200px;
     border-radius: 5px;
     margin-right: 10px;
+    margin-bottom: 10px;
 }
 input.search:focus {
-    border: none;
+    border: 1px solid #c3c6c9;
     outline: 0px;
     box-shadow: unset;
 }
@@ -125,6 +130,7 @@ input.search:focus {
     background: #95bfbf;
     color: white;
     transition: all 500ms ease-in-out;
+    margin-bottom: 10px;
 }
 .global-search .sb_submit:hover {
     background: #75A3A3;
@@ -133,7 +139,7 @@ input.search:focus {
 
 /* Autocomplete Stying */
 .autocomplete-items {
-    width: 200px;
+    position: absolute; top: 55px; left: 0;
     border-radius: 5px;
     border: 1px solid #e3e3e3;
     background: #fafafa;
