@@ -37,32 +37,38 @@
             </div>
             <form class="global-search" method="GET" autocomplete="off">
                 <div id="search_fields">
-                    {% if query_info %}
-                    <div class="search_item"><input class="search fav_artist" id="input" type="text" name="search"
-                            placeholder="your favorite artist" value="{{ query_info['artist_name'] }}"></div>
-                    <div class="search_item"><input class="search ling_desc" id="input" type="text" name="ling_desc"
-                            placeholder="describe a mood, tempo, rhythm, etc." value="{{ query_info['ling_desc'] }}"></div>
-                    <div class="search_item"><input class="search disliked_artist" id="input" type="text"
-                            name="disliked_artist" placeholder="which artist do you NOT like?" value="{{ query_info['disliked_artist'] }}"></div>
-                    {% else %}
-                    <div class="search_item"><input class="search fav_artist" id="input" type="text" name="search"
-                            placeholder="your favorite artist"></div>
-                    <div class="search_item"><input class="search ling_desc" id="input" type="text" name="ling_desc"
-                            placeholder="describe a mood, tempo, rhythm, etc."></div>
-                    <div class="search_item"><input class="search disliked_artist" id="input" type="text"
-                            name="disliked_artist" placeholder="which artist do you NOT like?"></div>
-                    {% endif %}
+                    <div class="search_item">
+                        <input class="search fav_artist" id="input" type="text" name="search"
+                            placeholder="your favorite artist"
+                               {% if query_info %} value="{{ query_info['artist_name'] }}"
+                               {% else %}{% endif %}>
+                    </div>
+                    <div class="search_item">
+                        <input class="search ling_desc" id="input" type="text" name="ling_desc"
+                            placeholder="describe a mood, tempo, rhythm, etc."
+                               {% if query_info %} value="{{ query_info['ling_desc'] }}"
+                               {% else %}{% endif %}>
+                    </div>
+                    <div class="search_item">
+                        <input class="search disliked_artist" id="input" type="text"
+                            name="disliked_artist" placeholder="which artist do you NOT like?"
+                               {% if query_info %} value="{{ query_info['disliked_artist'] }}"
+                               {% else %}{% endif %}>
+                    </div>
                     <button class="sb_submit" type="submit"> ▶ </button>
                 </div>
             </form>
         </div>
+    </div>
+    <div id="about_hover">
+        <div class="abt-icon"><span class="material-icons">people</span></div>
+        <div class="extra">CS 4300 Spring 2021: {{ netid }}</div>
     </div>
 </body>
 <script src="/static/scripts/search_autocomplete.js"></script>
 <script>
     // Instantiating code goes here so that we can make use of Flask templates
     let artists = [{% for artist in artist_names %}'{{artist}}', {% endfor %}""].slice(0, -1);
-    console.log(artists.length);
 
     initAutoCompleteDropdown(document.getElementsByClassName("fav_artist")[0], artists);
     initAutoCompleteDropdown(document.getElementsByClassName("disliked_artist")[0], artists);
