@@ -90,7 +90,7 @@ def get_artist_photo(artist_name):
         return "https://www.pngitem.com/pimgs/m/148-1487614_spotify-logo-small-spotify-logo-transparent-hd-png.png"
 
 def rocchio_update(query, query_obj, input_doc_mat=matrix, \
-        artist_name_to_index=artist_name_to_index,a=.3, b=.3, c=.8):
+        artist_name_to_index=artist_name_to_index,a=.3, b=.3, c=.3):
     """ Returns a vector representing the modified query vector.
 
     Note:
@@ -137,18 +137,19 @@ def cosine_similarity(query_vec, tfidf_mat=matrix):
     scores = tfidf_mat.dot(query_vec)
     return scores
 
-def get_filter_function(name, rel_artists, avg_followers, percentage=0.5):
+def get_filter_function(name, rel_artists, irrel_artists, avg_followers, percentage=0.5):
     """ Returns True if [name] has more followers than [percentage] * [avg_followers]
         and [name] is not part of user input ([rel_artists]).
     
     Parameters: {name: String
                  rel_artists: List
+                 irrel_artists: List
                  avg_followers: Float
                  percentage: Float}
     Returns: Boolean
     """
     follower_threshold = avg_followers * percentage
-    return name not in rel_artists and get_artist_follower_count(name) > follower_threshold
+    return name not in rel_artists and name not in irrel_artists and get_artist_follower_count(name) > follower_threshold
 
 def minmax_scale(vec):
     """ Returns min/max scale of [vec].
@@ -177,19 +178,20 @@ def get_rec_artists(query, ling_desc, disliked_artist, artist_name_to_index=arti
         'relevant_artists': [query] if query else [],
         'irrelevant_artists': [disliked_artist] if disliked_artist else []
     }
-    query_vec = rocchio_update(idx, query_obj)
+    query_vec = rocchio_update(idx, query_obj, c=0.8)
     
     cosine_scores = minmax_scale(cosine_similarity(query_vec))
     jaccard_scores = minmax_scale(rocchio_update(idx,query_obj,input_doc_mat=jaccard))
-    ling_scores = ling_similarity(ling_desc)  # There are some NaN problems probably from minmax .... swetas ...
+    ling_scores = ling_similarity(ling_desc)
     
     final_scores = cosine_scores + jaccard_scores + ling_scores
+    final_scores /= 3 if ling_desc else 2
     
     sorted_indices = np.argsort(final_scores)
     rankings = [(artist_names[i], final_scores[i]) for i in sorted_indices[::-1]]
     
     average_followers = np.array([get_artist_follower_count(name) for name in query_obj['relevant_artists']]).mean()
-    artist_ranking = list(filter(lambda x: get_filter_function(x[0], query_obj['relevant_artists'], average_followers), rankings))
+    artist_ranking = list(filter(lambda x: get_filter_function(x[0], query_obj['relevant_artists'], query_obj['irrelevant_artists'], average_followers), rankings))
     return artist_ranking[:10]
 
 def get_results(query, ling_desc, disliked_artist):
@@ -210,7 +212,7 @@ def get_results(query, ling_desc, disliked_artist):
         genres = 'None.' if genres == '' else genres
         data.append({
             'artist_name' : artist,
-            'sim_score' : str(round(score, 2)),
+            'sim_score' : str(round(score * 100, 2)) + '%',
             'artist_id' : get_artist_id(artist),
             'common_genres' : genres,
             'description' : get_artist_description(artist),

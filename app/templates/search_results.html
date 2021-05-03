@@ -66,7 +66,7 @@
                         <div class="left"><img src="{{ d['img_url'] }}"></div>
                         <div class="right">
                             <h4>{{ d['artist_name'] }}</h4>
-                            <p>{{ "Similarity score: " + d['sim_score'] }}</p>
+                            <p>{{ d['sim_score'] + " confidence" }}</p>
                             <p>{{ "Pitchfork average rating: " + d['rating'] }}</p>
                             <p>{{ "Genres in common: " + d['common_genres'] }}</p>
                             <p>{{ d['description'] }}</p>
