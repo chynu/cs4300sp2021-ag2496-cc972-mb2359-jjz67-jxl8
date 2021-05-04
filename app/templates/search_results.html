@@ -7,7 +7,7 @@
 
 <head>
     <title>Similar Singer</title>
-    <link rel="icon" href="/static/img/record_logo.png">
+    <link rel="icon" href="/static/img/favicon-square.png">
     <link rel="stylesheet" href="/static/style/bootstrap.min.css">
     <link rel="stylesheet" href="/static/style/global.css">
     <link rel="stylesheet" href="/static/style/results.css">
@@ -15,6 +15,8 @@
 </head>
 
 <body>
+
+
     <!-- RESULTS PAGE HEADER -->
     <div id="results-header">
         <div class="logo"><a href="/"><img class="record_icon" src="/static/img/record_bordered_logo.svg"></a></div>
@@ -37,56 +39,64 @@
             </form>
         </div>
     </div>
+
+
     <!-- RESULTS PAGE RESULTS -->
-    <div id="results-container">{% if data %}
+    <div id="results-container">
+    {% if data %}
         <h3>{{output_message}}</h3>
         <div class="results list">
+
             {% for d in data %}
             {% set genres = d['common_genres'].split(',') %}
-            <div class="card item">
-                <div class="left"><img src="{{ d['img_url'] }}"></div>
-                <div class="right">
-                    <div class="result-title">
-                        <h4>{{ d['artist_name'] }}</h4>
-                        <div class="spotify followers" data-followers="{{ d['follower_count'] }}"><img src="/static/img/spotify.png"/></div>
-                    </div>
-                    <p>{{ "Similarity score: " + d['sim_score'] }}</p>
-                    <p>{{ "Genres in common: " + d['common_genres'] }}</p>
-                    <div class="genre-tags">{% for g in genres %} <span class="tag">{{g}}</span> {% endfor %}</div>
-                    <iframe class="spotify-player" data-active="false" src={{ "https://open.spotify.com/embed/artist/" + d['artist_id'] }} width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    {% endif %}</div>
 
-<!--    &lt;!&ndash; RESULTS PAGE RESULTS &ndash;&gt;-->
-<!--    <div id="results-container">-->
-<!--        <div class="main bar">-->
-<!--            <form class="form-inline global-search">-->
-<!--                {% if data %}-->
-<!--                <h3>{{output_message}}</h3>-->
-<!--                <div class="results list">-->
-<!--                    {% for d in data %}-->
-<!--                    <div class="item">-->
-<!--                        <div class="left"><img src="{{ d['img_url'] }}"></div>-->
-<!--                        <div class="right">-->
-<!--                            <div class="result-title">-->
-<!--                                <h4>{{ d['artist_name'] }}</h4>-->
-<!--                                <div class="spotify"><img src="/static/img/spotify.png"/> {{ d['follower_count'] }} spotify followers </div>-->
-<!--                            </div>-->
-<!--                            <p>{{ "Similarity score: " + d['sim_score'] }}</p>-->
-<!--                            <p>{{ "Genres in common: " + d['common_genres'] }}</p>-->
-<!--&lt;!&ndash;                            <p>{{ d['description'] }}</p>&ndash;&gt;-->
-<!--                            <iframe src={{ "https://open.spotify.com/embed/artist/" + d['artist_id'] }} width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    {% endfor %}-->
-<!--                </div>-->
-<!--                {% endif %}-->
-<!--            </form>-->
-<!--        </div>-->
-<!--    </div>-->
+            <!-- Each artist result -->
+            <div class="card item">
+
+                <!-- Left side of profile card -->
+                <div class="left">
+                    <div><img src="{{ d['img_url'] }}"></div>
+                    <div class="spotify followers" data-followers="{{ d['follower_count'] }}"><img src="/static/img/spotify.png"/></div>
+                </div>
+                <!------------------------------->
+
+                <!-- Right side of profile card -->
+                <div class="right">
+                    <h4>{{ d['artist_name'] }}</h4>
+                    <hr>
+                    <div class="sim-score">
+                        <span class="tag
+                                     {% if d['sim_score'] >= 70 %} high
+                                     {% elif d['sim_score] >= 50 %} med
+                                     {% else %} low
+                                     {% endif %}">
+                            {{ d['sim_score'] }}% similar
+                        </span>
+                    </div>
+                    <div>Genres in common:</div>
+                    <div class="genre-tags">
+                        {% for g in genres %}
+                            <div class="tag">{{g}}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="artist-rating">{{ d['rating'] }}</div>
+                    <iframe class="spotify-player" data-active="false"
+                            src={{ "https://open.spotify.com/embed/artist/" + d['artist_id'] }}
+                            width="300" height="380" frameborder="0" allowtransparency="true"
+                            allow="encrypted-media"></iframe>
+                </div>
+                <!-------------------------------->
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+    {% else %}
+        <h3>Sorry, something went wrong.</h3>
+    {% endif %}
+    </div>
+
 </body>
 <script src="/static/scripts/search_autocomplete.js"></script>
 <script src="/static/scripts/results.js"></script>

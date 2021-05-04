@@ -1,5 +1,4 @@
 $('.spotify.followers').on("click", (e) => {
-    console.log("HELLO!");
    let artistBody = $(e.target).parent().parent();
    let player = artistBody.find(".spotify-player");
    if (player.attr("data-active") == "true") {
@@ -14,21 +13,12 @@ $('.spotify.followers').on("click", (e) => {
 });
 
 function shortenNumber(n) {
-    let s = "" + n;
-    let suffix = "";
-    let threes = Math.floor(s.length / 3);
-    if (threes == 0) {
-        suffix = "";
-    } else if (threes == 1) {
-        suffix = "K";
-    } else if (threes == 2) {
-        suffix = "M";
-    } else if (threes == 3) {
-        suffix = "T"
-    } else {
-        return n;
-    }
-    return Math.round(n/(Math.pow(10,3*threes))) + suffix;
+    if (n >= 1000000) return internationalize(n/1000000) + "M";
+    if (n >= 1000) return internationalize(n/1000) + "K";
+    return internationalize(n);
+}
+function internationalize(n) {
+    return new Intl.NumberFormat().format(Math.round(n*10)/10);
 }
 
 $('.spotify.followers').each(function () {
