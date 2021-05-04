@@ -81,6 +81,7 @@
 .results.list .item .spotify img {
     width: 20px;
     height: auto;
+    margin-right: 10px;
 }
 .results.list img {
     width: 100px;

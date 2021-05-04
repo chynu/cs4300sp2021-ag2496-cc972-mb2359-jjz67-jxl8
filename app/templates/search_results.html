@@ -48,7 +48,7 @@
                 <div class="right">
                     <div class="result-title">
                         <h4>{{ d['artist_name'] }}</h4>
-                        <div class="spotify followers"><img src="/static/img/spotify.png"/> {{ d['follower_count'] }} followers </div>
+                        <div class="spotify followers" data-followers="{{ d['follower_count'] }}"><img src="/static/img/spotify.png"/></div>
                     </div>
                     <p>{{ "Similarity score: " + d['sim_score'] }}</p>
                     <p>{{ "Genres in common: " + d['common_genres'] }}</p>
