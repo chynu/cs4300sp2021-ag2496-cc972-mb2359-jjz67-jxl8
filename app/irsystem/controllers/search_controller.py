@@ -216,7 +216,7 @@ def get_results(query, ling_desc, disliked_artist):
             'artist_id' : get_artist_id(artist),
             'common_genres' : genres,
             'description' : get_artist_description(artist),
-            'follower_count': get_artist_follower_count(artist)
+            'follower_count': get_artist_follower_count(artist),
             'img_url' : get_artist_photo(artist),
             'rating' : str(get_artist_rating(artist))
         })
