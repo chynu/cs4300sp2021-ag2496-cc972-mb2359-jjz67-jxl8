@@ -17,7 +17,8 @@
         padding: 20px;
     }
     #searchbox.centered input.search,
-    #searchbox.centered .autocomplete-items {
+    #searchbox.centered .autocomplete-items,
+    #searchbox.centered .tags_input {
         width: calc((max(60vw,650px) - 400px)/3 - 10px);
     }
     #searchbox .record_icon {
@@ -35,7 +36,8 @@
         padding: 20px;
     }
     #searchbox.centered input.search,
-    #searchbox.centered .autocomplete-items {
+    #searchbox.centered .autocomplete-items,
+    #searchbox.centered .tags_input {
         width: calc(max(60vw,650px) - 400px);
     }
     #searchbox .record_icon {
@@ -75,12 +77,12 @@
 
     transform: translate(0, 30px);
     -ms-transform: translate(0, 30px);
-    transition: 300ms ease-in;
+    transition: 200ms ease-in;
 }
 #about_hover:hover {
-    transform: translate(0, -25px);
-    -ms-transform: translate(0, -25px);
-    transition: 300ms ease-in;
+    transform: translate(0, -10px);
+    -ms-transform: translate(0, -10px);
+    transition: 200ms ease-in;
 }
 #about_hover .abt-icon {
     margin: 0;
@@ -95,7 +97,7 @@
     color: #7a7a7a;
 }
 #about_hover .extra {
-    padding: 10px;
+    padding: 10px 10px 40px 10px;
     color: #7a7a7a;
     font-size: 11px;
     background: #c4cfcf;

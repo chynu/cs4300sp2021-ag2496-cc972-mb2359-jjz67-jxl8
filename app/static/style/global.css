@@ -159,3 +159,56 @@ input.search:focus {
 .autocomplete-suggestion:hover, .autocomplete-active {
     background: #abc7c7;
 }
+
+/* SEARCH INPUT TAGS */
+.tags_input {
+    height: 50px;
+    padding: 3px 10px;
+    background: #e3e3e3;
+    border: 1px solid #d4d4d4;
+    outline: 0px;
+    width: 200px;
+    border-radius: 5px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    font-size: 11px;
+    color: grey;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: start;
+    align-items: flex-start;
+}
+/* User-created tags */
+.tags_input .user-tag {
+    width: auto;
+    padding: 5px;
+    margin: 0 5px 0 0;
+    border-radius: 3px;
+    background: #c3dae0;
+    cursor: pointer;
+    flex-grow: 0;
+    flex-shrink: 3;
+}
+.tags_input .user-tag:after {
+    content: "  x";
+    color: #3e3e3e;
+}
+.tags_input .user-tag:active {
+    background: #aec8ce;
+}
+/* Input */
+.tags_input .tag-input-div {
+    width: auto;
+    padding: 0; margin: 0;
+    flex-grow: 0;
+    flex-shrink: 3;
+    flex-basis: 10px;
+}
+.tags_input .tag-input-div input.tag {
+    border: none;
+    outline: 0;
+    padding: 0; margin: 0;
+    background: none;
+}

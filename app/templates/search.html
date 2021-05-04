@@ -38,8 +38,13 @@
             <form class="global-search" method="GET" autocomplete="off">
                 <div id="search_fields">
                     <div class="search_item">
+                        <!-- TODO(celine): Finish(?) the tag system. -->
+<!--                        <input type="hidden" value="" id="fav_artist_tag" name="fav_artist_tag">-->
+<!--                        <div class="tags_input" data-role="artist_tags" data-id="fav_artist_tag">-->
+<!--                            <div class="tag-input-div"><input data-id="fav_artist_tag" class="tag" type="text"></div>-->
+<!--                        </div>-->
                         <input class="search fav_artist" id="input" type="text" name="search"
-                            placeholder="your favorite artist"
+                            placeholder="your favorite artist" data-role="tagsinput"
                                {% if query_info %} value="{{ query_info['artist_name'] }}"
                                {% else %}{% endif %}>
                     </div>
@@ -66,12 +71,16 @@
     </div>
 </body>
 <script src="/static/scripts/search_autocomplete.js"></script>
+<script src="/static/scripts/search_tagsinput.js"></script>
 <script>
     // Instantiating code goes here so that we can make use of Flask templates
     let artists = [{% for artist in artist_names %}'{{artist}}', {% endfor %}""].slice(0, -1);
 
     initAutoCompleteDropdown(document.getElementsByClassName("fav_artist")[0], artists);
     initAutoCompleteDropdown(document.getElementsByClassName("disliked_artist")[0], artists);
+
+    // testing tag system with dropdown
+    // initializeTagsInput($(".fav_artist"), artists);
 </script>
 
 </html>
