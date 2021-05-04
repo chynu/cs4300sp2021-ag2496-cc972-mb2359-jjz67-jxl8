@@ -22,7 +22,6 @@ function internationalize(n) {
 }
 
 $('.spotify.followers').each(function () {
-    console.log($(this));
     let followers = parseInt($(this).attr("data-followers"));
     $(this).append(shortenNumber(followers) + " followers");
 });

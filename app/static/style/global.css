@@ -94,6 +94,15 @@ h4 {
     height: auto;
     margin: 10px;
 }
+.search_item.for-error {
+    position: relative;
+}
+.error-msg {
+    position: absolute;
+    bottom: 7px; left: 10px;
+    color: red;
+    font-size: 12px;
+}
 
 /* ===== Search Input Elements ===== */
 #search_fields {
@@ -127,7 +136,6 @@ input.search:focus {
     border: none;
     padding: 15px;
     border-radius: 5px;
-    height: 50px;
     background: #95bfbf;
     color: white;
     transition: all 500ms ease-in-out;
@@ -160,10 +168,12 @@ input.search:focus {
 .autocomplete-suggestion:hover, .autocomplete-active {
     background: #abc7c7;
 }
+input.search, .tags_input, .sb_submit {
+    height: 60px;
+}
 
 /* SEARCH INPUT TAGS */
 .tags_input {
-    height: 50px;
     padding: 3px 10px;
     background: #e3e3e3;
     border: 1px solid #d4d4d4;
@@ -174,7 +184,6 @@ input.search:focus {
     margin-bottom: 10px;
     overflow-y: scroll;
     overflow-x: hidden;
-    font-size: 11px;
     color: grey;
     display: flex;
     flex-flow: row wrap;
@@ -185,8 +194,9 @@ input.search:focus {
 .tags_input .user-tag {
     width: auto;
     padding: 5px;
-    margin: 0 5px 0 0;
-    border-radius: 3px;
+    margin: auto 5px auto 0;
+    border: 3px solid #e3e3e3;
+    border-radius: 6px;
     background: #c3dae0;
     cursor: pointer;
     flex-grow: 0;
@@ -201,15 +211,19 @@ input.search:focus {
 }
 /* Input */
 .tags_input .tag-input-div {
-    width: auto;
-    padding: 0; margin: 0;
-    flex-grow: 0;
+    padding: 0;
+    margin: auto 0;
+    flex-grow: 3;
     flex-shrink: 3;
     flex-basis: 10px;
+    display: flex;
+    flex-wrap: wrap;
 }
 .tags_input .tag-input-div input.tag {
     border: none;
     outline: 0;
-    padding: 0; margin: 0;
+    padding: 5px;
+    margin: auto 0;
     background: none;
+    width: 100%;
 }
