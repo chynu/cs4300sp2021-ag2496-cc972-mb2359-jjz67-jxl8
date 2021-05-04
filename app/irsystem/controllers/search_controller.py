@@ -16,12 +16,7 @@ tf_idf = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag249
 artist_details = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/removed_dups_new.csv")
 jaccard = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/data/processed/jaccard.csv",index_col=[0]).to_numpy()
 
-reviews1 = json.loads(requests.get("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/scripts/ratings_0-803.json").text)
-reviews2 = json.loads(requests.get("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/scripts/ratings_804_1606.json").text)
-reviews3 = json.loads(requests.get("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/scripts/ratings_1607_2409.json").text)
-reviews4 = json.loads(requests.get("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/scripts/ratings_2410_3212.json").text)
-reviews5 = json.loads(requests.get("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/scripts/ratings_3213-4013.json").text)
-reviews = {**reviews1, **reviews2, **reviews3, **reviews4, **reviews5}
+reviews = json.loads(requests.get("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/data/raw/ratings.json").text)
 
 artist_names = tf_idf.values[:,0]
 artist_name_to_index = {artist_names[i]: i for i in range(len(artist_names))}
