@@ -43,6 +43,9 @@ function initAutoCompleteDropdown(inp, arr, isTag) {
             if (currentFocus > -1) {
                 keydownEvent.preventDefault();
                 if (x) x[currentFocus].click();
+            } else {
+                let hiddenInput = $("#" + $(inp).attr("data-id"));
+                hiddenInput.val($(inp).val());
             }
         } else if (keydownEvent.key == "ArrowDown") {
             currentFocus++;

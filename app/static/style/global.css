@@ -94,6 +94,15 @@ h4 {
     height: auto;
     margin: 10px;
 }
+.search_item.for-error {
+    position: relative;
+}
+.error-msg {
+    position: absolute;
+    bottom: 7px; left: 10px;
+    color: red;
+    font-size: 12px;
+}
 
 /* ===== Search Input Elements ===== */
 #search_fields {

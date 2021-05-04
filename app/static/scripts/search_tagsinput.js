@@ -3,9 +3,14 @@ const DISLIKED_ARTIST_MSG = "artists you don't like";
 const LIKED_ARTIST_MSG = "your favorite artist";
 
 $('input.tag').on('keydown', (e) => {
+    let inputDOM = $(e.target);
+    if (e.key == "Enter") {
+        // Handling for the case in which the user enters an invalid query.
+        // let hiddenInput = $("#" + inputDOM.attr("data-id"));
+        // hiddenInput.val(inputDOM.val());
+    }
     if (e.key == "Backspace" & $(e.target).val() == "") {
         e.preventDefault();
-        let inputDOM = $(e.target);
         let tagsDiv = inputDOM.parent().parent(); // ".tags_input" class
         let allCurrentTags = tagsDiv.find(".user-tag");
         let lastAddedTag = $(allCurrentTags[allCurrentTags.length - 1]);

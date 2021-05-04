@@ -4,6 +4,7 @@
 -->
 
 <html>
+{% set enableTags = false %}
 
 <head>
     <title>Similar Singer</title>
@@ -28,6 +29,7 @@
                 <div id="search_fields">
                     <!-- ============== FAV ARTIST QUERY ============== -->
                     <div class="search_item">
+                        {% if enableTags %}
                         <input type="hidden" value="" id="fav_artist_tag" name="search">
                         <div class="tags_input" data-role="artist_tags" data-id="fav_artist_tag">
                             <div class="tag-input-div">
@@ -37,9 +39,10 @@
                                        placeholder="your favorite artist">
                             </div>
                         </div>
-
-<!--                        <input class="search fav_artist" id="input" type="text" name="search"-->
-<!--                            placeholder="your favorite artist" value="{{query_info['artist_name']}}">-->
+                        {% else %}
+                        <input class="search fav_artist" id="input" type="text" name="search"
+                            placeholder="your favorite artist" value="{{query_info['artist_name']}}">
+                        {% endif %}
                     </div>
 
                     <!-- ============== LING DESC QUERY ============== -->
@@ -50,6 +53,7 @@
 
                     <!-- ============== DISLIKED ARTIST QUERY ============== -->
                     <div class="search_item">
+                        {% if enableTags %}
                         <input type="hidden" value="" id="disliked_artist_tag" name="disliked_artist">
                         <div class="tags_input" data-role="artist_tags" data-id="disliked_artist_tag">
                             <div class="tag-input-div">
@@ -59,10 +63,11 @@
                                        placeholder="artists you don't like">
                             </div>
                         </div>
-
-<!--                        <input class="search disliked_artist" id="input" type="text"-->
-<!--                            name="disliked_artist" placeholder="which artist do you NOT like?"-->
-<!--                            value="{{query_info['disliked_artist']}}">-->
+                        {% else %}
+                        <input class="search disliked_artist" id="input" type="text"
+                            name="disliked_artist" placeholder="which artist do you NOT like?"
+                            value="{{query_info['disliked_artist']}}">
+                        {% endif %}
                     </div>
                     <button class="sb_submit" type="submit"> ▶ </button>
                 </div>
@@ -154,13 +159,18 @@
 <script>
     // Instantiating code goes here so that we can make use of Flask templates
     let artists = [{% for artist in artist_names %}'{{artist}}', {% endfor %}""].slice(0, -1);
-
-    // initAutoCompleteDropdown(document.getElementsByClassName("fav_artist")[0], artists);
-    // initAutoCompleteDropdown(document.getElementsByClassName("disliked_artist")[0], artists);
-
+</script>
+{% if enableTags %}
+<script>
     initAutoCompleteDropdown(document.getElementById("fav_artist_tag_input"), artists, true);
     initAutoCompleteDropdown(document.getElementById("disliked_artist_tag_input"), artists, true);
 </script>
+{% else %}
+<script>
+    initAutoCompleteDropdown(document.getElementsByClassName("fav_artist")[0], artists);
+    initAutoCompleteDropdown(document.getElementsByClassName("disliked_artist")[0], artists);
+</script>
+{% endif %}
 
 {% if query_info %}
 <script>
