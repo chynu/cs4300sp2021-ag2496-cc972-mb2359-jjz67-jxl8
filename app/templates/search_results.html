@@ -64,22 +64,38 @@
                 <div class="right">
                     <h4>{{ d['artist_name'] }}</h4>
                     <hr>
+                    <div class="artist-rating">
+                        {% set rounded_rating = d['rating']|int|round(1,'floor') %}
+                        {% set true_rating = d['rating']|float %}
+                        {% if true_rating > 0 %}
+                            {% for i in range(10) %}
+                                {% if true_rating > (i+1) %}
+                                    <span class="material-icons fill">star</span>
+                                {% elif (true_rating != rounded_rating) and (i == rounded_rating) %}
+                                    <span class="material-icons fill">star_half</span>
+                                {% else %}
+                                    <span class="material-icons empty">star_border</span>
+                                {% endif %}
+                            {% endfor %}
+                            {{ true_rating }}
+                        {% else %}
+                            <div class="no-rating">No rating for this artist.</div>
+                        {% endif %}
+                    </div>
                     <div class="sim-score">
                         <span class="tag
-                                     {% if d['sim_score'] >= 70 %} high
-                                     {% elif d['sim_score] >= 50 %} med
+                                     {% if d['sim_score'] >= 60 %} high
+                                     {% elif d['sim_score'] >= 40 %} med
                                      {% else %} low
                                      {% endif %}">
                             {{ d['sim_score'] }}% similar
                         </span>
                     </div>
-                    <div>Genres in common:</div>
                     <div class="genre-tags">
                         {% for g in genres %}
-                            <div class="tag">{{g}}</div>
+                            <div class="tag" title="Genres in common">{{g}}</div>
                         {% endfor %}
                     </div>
-                    <div class="artist-rating">{{ d['rating'] }}</div>
                     <iframe class="spotify-player" data-active="false"
                             src={{ "https://open.spotify.com/embed/artist/" + d['artist_id'] }}
                             width="300" height="380" frameborder="0" allowtransparency="true"

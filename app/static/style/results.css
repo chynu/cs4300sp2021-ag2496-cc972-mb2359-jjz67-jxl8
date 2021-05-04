@@ -56,6 +56,7 @@
     display: flex;
     flex-wrap: wrap;
     margin: 0 50px;
+    font-family: "Didact Gothic", sans-serif;
 }
 /* Left side of profile */
 .results.list img {
@@ -68,7 +69,7 @@
     border-radius: 5px;
     padding: 10px;
     margin-top: 10px;
-    font-size: 11.5px;
+    font-size: 13px;
     color: white;
     cursor: pointer;
     transition: 200ms ease-in;
@@ -93,6 +94,38 @@
 }
 .results.list hr {
     border-top: 1px solid #4a5a5a;
+    margin: 5px 0 10px 0;
+}
+.results.list .tag {
+    padding: 5px 7px;
+    margin: 0 6px 8px 0;
+    border-radius: 3px;
+    width: auto;
+    font-size: 11px;
+    cursor: default;
+    letter-spacing: 1px;
+}
+.results.list .artist-rating {
+    margin-bottom: 13px;
+    cursor: default;
+}
+.results.list .artist-rating .no-rating {
+    font-style: italic;
+    color: #8f8f8f;
+}
+.results.list .artist-rating .material-icons {
+    font-size: 14px;
+    margin: 0; padding: 0;
+    letter-spacing: -2px;
+}
+.results.list .artist-rating .material-icons.fill {
+    color: #b5ac41;
+}
+.results.list .artist-rating .material-icons.empty {
+    color: #a6a488;
+}
+.results.list .sim-score {
+    margin-bottom: 10px;
 }
 .results.list .sim-score .tag.high {
     background: #8fba7f;
@@ -109,16 +142,8 @@
     display: flex;
     flex-wrap: wrap;
 }
-.results.list .tag {
-    padding: 5px 7px;
-    margin: 0 6px 8px 0;
-    border-radius: 3px;
-    width: auto;
-    font-size: 11px;
-    cursor: default;
-}
 .results.list .genre-tags .tag {
-    background: #d1c68c;
+    background: #a3adbf;
 }
 .results.list .spotify-player {
     height: 0;

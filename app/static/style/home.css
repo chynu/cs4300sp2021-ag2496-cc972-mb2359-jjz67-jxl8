@@ -5,8 +5,6 @@
  * main search page. If elements may be used in other pages, please add to global.css instead.
  */
 
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-
 /* Heading/Logo Elements */
 @media (min-width: 1620px) {
     /* Long oval */
@@ -80,8 +78,8 @@
     transition: 200ms ease-in;
 }
 #about_hover:hover {
-    transform: translate(0, -10px);
-    -ms-transform: translate(0, -10px);
+    transform: translate(0, -25px);
+    -ms-transform: translate(0, -25px);
     transition: 200ms ease-in;
 }
 #about_hover .abt-icon {
