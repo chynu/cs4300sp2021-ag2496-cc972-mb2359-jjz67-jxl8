@@ -5,7 +5,8 @@
  * @param inp Input Element to add the event listener to.
  * @param arr List of all input suggestions to possibly display in the dropdown.
  */
-function initAutoCompleteDropdown(inp, arr) {
+function initAutoCompleteDropdown(inp, arr, isTag) {
+    isTag = !!isTag;
     let currentFocus;
     inp.addEventListener("input", (e) => {
         let inputDOM = e.target;
@@ -84,7 +85,12 @@ function initAutoCompleteDropdown(inp, arr) {
 
             // Search field populates on suggestion click
             suggestion.addEventListener("click", (elClickEvent) => {
-                inputDOM.value = elClickEvent.target.getElementsByTagName("input")[0].value;
+                if (isTag) {
+                    inputDOM.value = elClickEvent.target.getElementsByTagName("input")[0].value;
+                    turnToTag($(inputDOM));
+                } else {
+                    inputDOM.value = elClickEvent.target.getElementsByTagName("input")[0].value;
+                }
                 closeAllLists();
             });
         } else {

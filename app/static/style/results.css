@@ -23,6 +23,11 @@
     width: 20vw;
     height: auto;
 }
+#results-header .search_item input.search,
+#results-header .search_item .tags_input
+{
+    min-width: calc((60vw - 70px - 15px)/3);
+}
 
 /* ======== RESULT HEADING ======== */
 #results-container {
