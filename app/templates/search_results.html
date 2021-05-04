@@ -7,7 +7,7 @@
 
 <head>
     <title>Similar Singer</title>
-    <link rel="icon" href="/static/img/record_logo.png">
+    <link rel="icon" href="/static/img/favicon-square.png">
     <link rel="stylesheet" href="/static/style/bootstrap.min.css">
     <link rel="stylesheet" href="/static/style/global.css">
     <link rel="stylesheet" href="/static/style/results.css">
@@ -15,6 +15,8 @@
 </head>
 
 <body>
+
+
     <!-- RESULTS PAGE HEADER -->
     <div id="results-header">
         <div class="logo"><a href="/"><img class="record_icon" src="/static/img/record_bordered_logo.svg"></a></div>
@@ -38,51 +40,82 @@
         </div>
     </div>
 
+
     <!-- RESULTS PAGE RESULTS -->
     <div id="results-container">
-        <div class="side bar">
-            <h3>Sidebar Header</h3>
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras accumsan tincidunt vehicula. Nunc
-                vulputate, lacus vitae cursus aliquam, felis purus vestibulum nisl, id bibendum arcu dui ut enim. Nam
-                fermentum, nunc sit amet porta sodales, elit eros pellentesque ante, et sodales nibh purus condimentum
-                risus. Aliquam ac viverra nunc, eget accumsan eros. Nulla facilisi. Pellentesque habitant morbi
-                tristique senectus et netus et malesuada fames ac turpis egestas. Mauris mauris elit, congue eget magna
-                vitae, feugiat hendrerit risus. Maecenas id odio rhoncus, varius velit lobortis, finibus purus.
-                Vestibulum faucibus at nibh vitae mollis. Ut facilisis sapien efficitur fringilla feugiat. Nam purus
-                magna, aliquam in massa non, malesuada dapibus ante. Duis gravida egestas erat, vel molestie purus
-                dapibus at. Aliquam arcu ligula, dapibus et pharetra non, faucibus vel ipsum. Duis dapibus a arcu
-                elementum pretium. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus
-                mus. Aliquam nec lacinia lectus.
-            </p>
-        </div>
-        <div class="main bar">
-            <form class="form-inline global-search">
-                {% if data %}
-                <h3>{{output_message}}</h3>
-                <div class="results list">
-                    {% for d in data %}
-                    <div class="item">
-                        <div class="left"><img src="{{ d['img_url'] }}"></div>
-                        <div class="right">
-                            <h4>{{ d['artist_name'] }}</h4>
-                            <p>{{ d['sim_score'] + " confidence" }}</p>
-                            {% if d['rating'] != 'not found' %}
-                            <p>{{ "Pitchfork average rating: " + d['rating'] }}</p>
-                            {% endif %}
-                            <p>{{ "Genres in common: " + d['common_genres'] }}</p>
-                            <p>{{ d['description'] }}</p>
-                            <iframe src={{ "https://open.spotify.com/embed/artist/" + d['artist_id'] }} width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-                        </div>
-                    </div>
-                    {% endfor %}
+    {% if data %}
+        <h3>{{output_message}}</h3>
+        <div class="results list">
+
+            {% for d in data %}
+            {% set genres = d['common_genres'].split(',') %}
+
+            <!-- Each artist result -->
+            <div class="card item">
+
+                <!-- Left side of profile card -->
+                <div class="left">
+                    <div><img src="{{ d['img_url'] }}"></div>
+                    <div class="spotify followers" data-followers="{{ d['follower_count'] }}"><img src="/static/img/spotify.png"/></div>
                 </div>
-                {% endif %}
-            </form>
+                <!------------------------------->
+
+                <!-- Right side of profile card -->
+                <div class="right">
+                    <h4>{{ d['artist_name'] }}</h4>
+                    <hr>
+                    <div class="artist-rating">
+                        {% set rounded_rating = d['rating']|int|round(1,'floor') %}
+                        {% set true_rating = d['rating']|float %}
+                        {% if true_rating > 0 %}
+                            {% for i in range(10) %}
+                                {% if true_rating > (i+1) %}
+                                    <span class="material-icons fill">star</span>
+                                {% elif (true_rating != rounded_rating) and (i == rounded_rating) %}
+                                    <span class="material-icons fill">star_half</span>
+                                {% else %}
+                                    <span class="material-icons empty">star_border</span>
+                                {% endif %}
+                            {% endfor %}
+                            {{ true_rating }}
+                        {% else %}
+                            <div class="no-rating">No rating for this artist.</div>
+                        {% endif %}
+                    </div>
+                    <div class="sim-score">
+                        <span class="tag
+                                     {% if d['sim_score'] >= 60 %} high
+                                     {% elif d['sim_score'] >= 40 %} med
+                                     {% else %} low
+                                     {% endif %}">
+                            {{ d['sim_score'] }}% similar
+                        </span>
+                    </div>
+                    <div class="genre-tags">
+                        {% for g in genres %}
+                            <div class="tag" title="Genres in common">{{g}}</div>
+                        {% endfor %}
+                    </div>
+                    <iframe class="spotify-player" data-active="false"
+                            src={{ "https://open.spotify.com/embed/artist/" + d['artist_id'] }}
+                            width="300" height="380" frameborder="0" allowtransparency="true"
+                            allow="encrypted-media"></iframe>
+                </div>
+                <!-------------------------------->
+
+            </div>
+
+            {% endfor %}
+
         </div>
+    {% else %}
+        <h3>Sorry, something went wrong.</h3>
+    {% endif %}
     </div>
+
 </body>
 <script src="/static/scripts/search_autocomplete.js"></script>
+<script src="/static/scripts/results.js"></script>
 <script>
     // Instantiating code goes here so that we can make use of Flask templates
     let artists = [{% for artist in artist_names %}'{{artist}}', {% endfor %}""].slice(0, -1);

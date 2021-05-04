@@ -5,7 +5,7 @@
  * search results page. If elements may be used in other pages, please add to global.css instead.
  */
 
-/* Results Page */
+/* ======== WEBSITE HEADER ======== */
 #results-header {
     width: 100%;
     display: flex;
@@ -23,34 +23,164 @@
     width: 20vw;
     height: auto;
 }
+
+/* ======== RESULT HEADING ======== */
 #results-container {
-    display: flex;
+    /*display: flex;*/
     margin-top: 60px;
     margin-bottom: 100px;
 }
-#results-container .side.bar {
-    flex: 0 4 auto;
-    margin-left: 50px;
-    max-width: 30vw;
+#results-container h3 {
+    margin: 0 80px 20px 80px;
 }
-#results-container .main.bar {
-    flex: 4 0 auto;
-    margin-right: 50px;
-}
-#results-container .bar {
-    margin: 20px;
-    background: white;
-    padding: 30px 50px;
-    border-radius: 10px;
-}
-.results.list .item {
+
+/* ======== RESULT ARTIST CARDS ======== */
+.results.list .card.item {
     display: flex;
-    margin: 20px 0;
+    background: #d4d6dc;
+    border-radius: 10px;
+    margin: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-.results.list .item .left {
+.results.list .card.item .left {
     margin-right: 20px;
 }
+.results.list .card.item .right {
+    flex-grow: 4;
+}
+.results.list .card.item p {
+    margin: 0 0 5px 0;
+}
+.results.list {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 50px;
+    font-family: "Didact Gothic", sans-serif;
+}
+/* Left side of profile */
 .results.list img {
-    width: 100px;
+    width: auto;
+    height: min(200px,12vw);
+    border-radius: 5px;
+}
+.results.list .spotify {
+    background: #444444;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 13px;
+    color: white;
+    cursor: pointer;
+    transition: 200ms ease-in;
+    height: 40px;
+}
+.results.list .spotify:hover {
+    transition: 200ms ease-in;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    background: #3b3b3b;
+}
+.results.list .spotify img {
+    width: 20px;
     height: auto;
+    margin-right: 10px;
+}
+/* Right side of profile */
+.results.list h4 {
+    font-family: "Didact Gothic", sans-serif;
+    font-size: 30px;
+    letter-spacing: 2px;
+    margin: 5px 0 10px 0;
+}
+.results.list hr {
+    border-top: 1px solid #4a5a5a;
+    margin: 5px 0 10px 0;
+}
+.results.list .tag {
+    padding: 5px 7px;
+    margin: 0 6px 8px 0;
+    border-radius: 3px;
+    width: auto;
+    font-size: 11px;
+    cursor: default;
+    letter-spacing: 1px;
+}
+.results.list .artist-rating {
+    margin-bottom: 13px;
+    cursor: default;
+}
+.results.list .artist-rating .no-rating {
+    font-style: italic;
+    color: #8f8f8f;
+}
+.results.list .artist-rating .material-icons {
+    font-size: 14px;
+    margin: 0; padding: 0;
+    letter-spacing: -2px;
+}
+.results.list .artist-rating .material-icons.fill {
+    color: #b5ac41;
+}
+.results.list .artist-rating .material-icons.empty {
+    color: #a6a488;
+}
+.results.list .sim-score {
+    margin-bottom: 10px;
+}
+.results.list .sim-score .tag.high {
+    background: #8fba7f;
+}
+.results.list .sim-score .tag.med {
+    background: #cfbd78;
+}
+.results.list .sim-score .tag.low {
+    background: #c4987a;
+}
+.results.list .genre-tags {
+    margin: 0 0 10px 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+.results.list .genre-tags .tag {
+    background: #a3adbf;
+}
+.results.list .spotify-player {
+    height: 0;
+    transition: height 500ms ease-in;
+}
+.results.list .spotify-player.expanded {
+    height: 300px;
+    transition: height 500ms ease-in;
+}
+.results.list .item iframe {
+    border-radius: 10px;
+    width: 100%;
+}
+@media (min-width: 1630px) {
+    .results .card.item {
+        width: calc(33% - 20px - 35px);
+    }
+    .results.list img {
+        width: auto;
+        height: min(200px,12vw);
+    }
+}
+@media (min-width: 1530px) and (max-width: 1629px){
+    .results .card.item {
+        width: calc(50% - 20px - 35px);
+    }
+    .results.list img {
+        width: auto;
+        height: min(200px,16vw);
+    }
+}
+@media (max-width: 1529px) {
+    .results .card.item {
+        width: calc(100% - 20px - 35px);
+    }
+    .results.list img {
+        width: auto;
+        height: min(200px,20vw);
+    }
 }

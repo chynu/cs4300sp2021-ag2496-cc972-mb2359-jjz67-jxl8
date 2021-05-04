@@ -207,12 +207,13 @@ def get_results(query, ling_desc, disliked_artist):
         genres = 'None.' if genres == '' else genres
         data.append({
             'artist_name' : artist,
-            'sim_score' : str(round(score * 100, 2)) + '%',
+            'sim_score' : round(score * 100, 2), # str(round(score * 100, 2)) + '%',
             'artist_id' : get_artist_id(artist),
             'common_genres' : genres,
             'description' : get_artist_description(artist),
+            'follower_count': get_artist_follower_count(artist),
             'img_url' : get_artist_photo(artist),
-            'rating' : str(get_artist_rating(artist))
+            'rating' : get_artist_rating(artist)
         })
     return data    
 

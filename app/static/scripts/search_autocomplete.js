@@ -23,8 +23,6 @@ function initAutoCompleteDropdown(inp, arr) {
         a.setAttribute("class", "autocomplete-items");
         inputDOM.parentNode.appendChild(a);
 
-        // TODO: Add a "No suggestions" option when there are no valid suggestions based on user's query.
-
         // Check similarity for each element in the suggestion list
         for (i = 0; i < arr.length; i++) {
             if (isSimilarEnough(val, arr[i])) {
@@ -33,7 +31,7 @@ function initAutoCompleteDropdown(inp, arr) {
         }
         if (a.childElementCount == 0) {
             a.appendChild(createSuggestion("No artist found", inp, true));
-        } // TODO(celine): Make dummy element unselectable
+        } // TODO: Make dummy element unselectable
     });
 
     // Lets users key up and down between suggestions
@@ -93,9 +91,6 @@ function initAutoCompleteDropdown(inp, arr) {
             suggestion.setAttribute("class", "autocomplete-suggestion autocomplete-dummy");
         }
         return suggestion;
-    }
-    function isDummyDropdown(inputDOM) {
-        return false;
     }
 
     // Close dropdown when user clicks on a suggestion
