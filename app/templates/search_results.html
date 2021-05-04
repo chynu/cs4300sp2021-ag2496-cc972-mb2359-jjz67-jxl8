@@ -37,49 +37,59 @@
             </form>
         </div>
     </div>
-
     <!-- RESULTS PAGE RESULTS -->
-    <div id="results-container">
-        <div class="side bar">
-            <h3>Sidebar Header</h3>
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras accumsan tincidunt vehicula. Nunc
-                vulputate, lacus vitae cursus aliquam, felis purus vestibulum nisl, id bibendum arcu dui ut enim. Nam
-                fermentum, nunc sit amet porta sodales, elit eros pellentesque ante, et sodales nibh purus condimentum
-                risus. Aliquam ac viverra nunc, eget accumsan eros. Nulla facilisi. Pellentesque habitant morbi
-                tristique senectus et netus et malesuada fames ac turpis egestas. Mauris mauris elit, congue eget magna
-                vitae, feugiat hendrerit risus. Maecenas id odio rhoncus, varius velit lobortis, finibus purus.
-                Vestibulum faucibus at nibh vitae mollis. Ut facilisis sapien efficitur fringilla feugiat. Nam purus
-                magna, aliquam in massa non, malesuada dapibus ante. Duis gravida egestas erat, vel molestie purus
-                dapibus at. Aliquam arcu ligula, dapibus et pharetra non, faucibus vel ipsum. Duis dapibus a arcu
-                elementum pretium. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus
-                mus. Aliquam nec lacinia lectus.
-            </p>
-        </div>
-        <div class="main bar">
-            <form class="form-inline global-search">
-                {% if data %}
-                <h3>{{output_message}}</h3>
-                <div class="results list">
-                    {% for d in data %}
-                    <div class="item">
-                        <div class="left"><img src="{{ d['img_url'] }}"></div>
-                        <div class="right">
-                            <h4>{{ d['artist_name'] }}</h4>
-                            <p>{{ "Similarity score: " + d['sim_score'] }}</p>
-                            <p>{{ "Genres in common: " + d['common_genres'] }}</p>
-                            <p>{{ d['description'] }}</p>
-                            <iframe src={{ "https://open.spotify.com/embed/artist/" + d['artist_id'] }} width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-                        </div>
+    <div id="results-container">{% if data %}
+        <h3>{{output_message}}</h3>
+        <div class="results list">
+            {% for d in data %}
+            {% set genres = d['common_genres'].split(',') %}
+            <div class="card item">
+                <div class="left"><img src="{{ d['img_url'] }}"></div>
+                <div class="right">
+                    <div class="result-title">
+                        <h4>{{ d['artist_name'] }}</h4>
+                        <div class="spotify followers"><img src="/static/img/spotify.png"/> {{ d['follower_count'] }} followers </div>
                     </div>
-                    {% endfor %}
+                    <p>{{ "Similarity score: " + d['sim_score'] }}</p>
+                    <p>{{ "Genres in common: " + d['common_genres'] }}</p>
+                    <div class="genre-tags">{% for g in genres %} <span class="tag">{{g}}</span> {% endfor %}</div>
+                    <iframe class="spotify-player" data-active="false" src={{ "https://open.spotify.com/embed/artist/" + d['artist_id'] }} width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
                 </div>
-                {% endif %}
-            </form>
+            </div>
+            {% endfor %}
         </div>
-    </div>
+    {% endif %}</div>
+
+<!--    &lt;!&ndash; RESULTS PAGE RESULTS &ndash;&gt;-->
+<!--    <div id="results-container">-->
+<!--        <div class="main bar">-->
+<!--            <form class="form-inline global-search">-->
+<!--                {% if data %}-->
+<!--                <h3>{{output_message}}</h3>-->
+<!--                <div class="results list">-->
+<!--                    {% for d in data %}-->
+<!--                    <div class="item">-->
+<!--                        <div class="left"><img src="{{ d['img_url'] }}"></div>-->
+<!--                        <div class="right">-->
+<!--                            <div class="result-title">-->
+<!--                                <h4>{{ d['artist_name'] }}</h4>-->
+<!--                                <div class="spotify"><img src="/static/img/spotify.png"/> {{ d['follower_count'] }} spotify followers </div>-->
+<!--                            </div>-->
+<!--                            <p>{{ "Similarity score: " + d['sim_score'] }}</p>-->
+<!--                            <p>{{ "Genres in common: " + d['common_genres'] }}</p>-->
+<!--&lt;!&ndash;                            <p>{{ d['description'] }}</p>&ndash;&gt;-->
+<!--                            <iframe src={{ "https://open.spotify.com/embed/artist/" + d['artist_id'] }} width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    {% endfor %}-->
+<!--                </div>-->
+<!--                {% endif %}-->
+<!--            </form>-->
+<!--        </div>-->
+<!--    </div>-->
 </body>
 <script src="/static/scripts/search_autocomplete.js"></script>
+<script src="/static/scripts/results.js"></script>
 <script>
     // Instantiating code goes here so that we can make use of Flask templates
     let artists = [{% for artist in artist_names %}'{{artist}}', {% endfor %}""].slice(0, -1);

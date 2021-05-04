@@ -189,7 +189,8 @@ def get_results(query, ling_desc, disliked_artist):
         genres = ", ".join(set(get_artist_genres(artist)) & set(get_artist_genres(query)))
         genres = 'None.' if genres == '' else genres
         data.append({'artist_name' : artist, 'sim_score' : str(round(score, 2)), 'artist_id' : get_artist_id(artist), \
-                    'common_genres' : genres, 'description' : get_artist_description(artist), 'img_url' : get_artist_photo(artist)})
+                    'common_genres' : genres, 'description' : get_artist_description(artist),\
+                     'follower_count': get_artist_follower_count(artist), 'img_url' : get_artist_photo(artist)})
     return data    
 
 @irsystem.route('/', methods=['GET'])
