@@ -109,7 +109,9 @@
     margin-bottom: 13px;
     cursor: default;
 }
-.results.list .artist-rating .no-rating {
+.results.list .artist-rating .no-rating,
+.results.list .genre-tags .no-genres
+{
     font-style: italic;
     color: #8f8f8f;
 }
