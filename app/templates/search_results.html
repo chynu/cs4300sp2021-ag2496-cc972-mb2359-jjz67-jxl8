@@ -48,7 +48,6 @@
         <div class="results list">
 
             {% for d in data %}
-            {% set genres = d['common_genres'].split(',') %}
 
             <!-- Each artist result -->
             <div class="card item">
@@ -92,9 +91,14 @@
                         </span>
                     </div>
                     <div class="genre-tags">
-                        {% for g in genres %}
-                            <div class="tag" title="Genres in common">{{g}}</div>
-                        {% endfor %}
+                        {% set genres = d['common_genres'].split(',') %}
+                        {% if genres|length > 0 and genres[0] != '' %}
+                            {% for g in genres %}
+                                <div class="tag" title="Genres in common">{{g}}</div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="no-genres">No common genres.</div>
+                        {% endif %}
                     </div>
                     <iframe class="spotify-player" data-active="false"
                             src={{ "https://open.spotify.com/embed/artist/" + d['artist_id'] }}

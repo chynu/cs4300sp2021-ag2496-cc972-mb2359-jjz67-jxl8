@@ -204,7 +204,7 @@ def get_results(query, ling_desc, disliked_artist):
         return []
     for artist, score in top_rec_artists:
         genres = ", ".join(set(get_artist_genres(artist)) & set(get_artist_genres(query)))
-        genres = 'None.' if genres == '' else genres
+        # genres = 'None.' if genres == '' else genres
         data.append({
             'artist_name' : artist,
             'sim_score' : round(score * 100, 2), # str(round(score * 100, 2)) + '%',
