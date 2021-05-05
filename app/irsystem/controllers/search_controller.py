@@ -157,23 +157,24 @@ def minmax_scale(vec):
     min = np.min(vec)
     return (vec-min) / (np.max(vec) - min)
 
-def get_rec_artists(query, ling_desc, disliked_artist, artist_name_to_index=artist_name_to_index):
+def get_rec_artists(liked_artists, ling_desc, disliked_artists, artist_name_to_index=artist_name_to_index):
     """ Returns list of recommended artists and their similarity scores 
         that are similar to [query] and dissimilar to [disliked_artist].
     
-    Parameters: {query: String (liked artist)
+    Parameters: {liked_artists: List (liked artist)
                  ling_desc: String
-                 disliked_artist: String
+                 disliked_artists: List
                  artist_name_to_index: Dict}
     Returns: List
     """
-    if (query not in artist_name_to_index) or (disliked_artist and (disliked_artist not in artist_name_to_index)):
+    all_artists, set_liked, set_disliked = set(artist_name_to_index), set(liked_artists), set(disliked_artists)
+    if len(all_artists & set_liked) != len(set_liked) or (disliked_artists and len(all_artists & set_disliked) != len(set_disliked)):
         return []
-    idx = artist_name_to_index[query]
-    
+
+    idx = artist_name_to_index[liked_artists[0]]
     query_obj = {
-        'relevant_artists': [query] if query else [],
-        'irrelevant_artists': [disliked_artist] if disliked_artist else []
+        'relevant_artists': liked_artists,
+        'irrelevant_artists': disliked_artists
     }
     query_vec = rocchio_update(idx, query_obj, c=0.8)
     
@@ -195,17 +196,25 @@ def get_results(query, ling_desc, disliked_artist):
     """ Returns list of recommended artists who are similar to [query] and dissimilar
         to [disliked_artist] along with their similarity score, description and photo.
     
-    Parameters: {query: String (liked artist)
+    Parameters: {query: String (liked artists)
                  ling_desc: String
                  disliked_artist: String}
     Returns: List
     """
     data = []
+
+    if not query:
+        return data
+    
+    query = query.split(',')
+    if disliked_artist:
+        disliked_artist = disliked_artist.split(',')
     top_rec_artists = get_rec_artists(query, ling_desc, disliked_artist)
-    if (top_rec_artists == []):
-        return []
+
+    query_genres = set([ i for artist in query for i in get_artist_genres(artist) ])
+
     for artist, score in top_rec_artists:
-        genres = ", ".join(set(get_artist_genres(artist)) & set(get_artist_genres(query)))
+        genres = ", ".join(set(get_artist_genres(artist)) & query_genres)
         description = get_artist_album_description(artist)
 
         data.append({
