@@ -4,11 +4,6 @@ const LIKED_ARTIST_MSG = "your favorite artist";
 
 $('input.tag').on('keydown', (e) => {
     let inputDOM = $(e.target);
-    if (e.key == "Enter") {
-        // Handling for the case in which the user enters an invalid query.
-        // let hiddenInput = $("#" + inputDOM.attr("data-id"));
-        // hiddenInput.val(inputDOM.val());
-    }
     if (e.key == "Backspace" & $(e.target).val() == "") {
         e.preventDefault();
         let tagsDiv = inputDOM.parent().parent(); // ".tags_input" class

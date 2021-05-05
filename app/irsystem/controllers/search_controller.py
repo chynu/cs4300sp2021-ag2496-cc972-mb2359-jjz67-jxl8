@@ -209,7 +209,11 @@ def get_results(query, ling_desc, disliked_artist):
     query = query.split(',')
     if disliked_artist:
         disliked_artist = disliked_artist.split(',')
+
     top_rec_artists = get_rec_artists(query, ling_desc, disliked_artist)
+
+    if not top_rec_artists:
+        return []
 
     query_genres = set([ i for artist in query for i in get_artist_genres(artist) ])
 
