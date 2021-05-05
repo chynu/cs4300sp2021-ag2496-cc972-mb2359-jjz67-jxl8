@@ -118,5 +118,5 @@ function initAutoCompleteDropdown(inp, arr, isTag) {
 function isSimilarEnough(userInput, targetString) {
     // Right now we are just using substring equals.
     // TODO: Potentially implement some form of simple cosine sim...?
-    return targetString.substr(0, userInput.length).toUpperCase() == userInput.toUpperCase();
+    return targetString.toUpperCase().includes(userInput.toUpperCase());
 }
