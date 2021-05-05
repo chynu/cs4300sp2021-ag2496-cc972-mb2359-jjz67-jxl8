@@ -168,7 +168,9 @@ def get_rec_artists(liked_artists, ling_desc, disliked_artists, artist_name_to_i
     Returns: List
     """
     all_artists, set_liked, set_disliked = set(artist_name_to_index), set(liked_artists), set(disliked_artists)
-    if len(all_artists & set_liked) != len(set_liked) or (disliked_artists and len(all_artists & set_disliked) != len(set_disliked)):
+    if (len(all_artists & set_liked) != len(set_liked)) or \
+            (disliked_artists and len(all_artists & set_disliked) != len(set_disliked)) or \
+            (disliked_artists and len(set_liked & set_disliked) > 0):
         return []
 
     idx = artist_name_to_index[liked_artists[0]]

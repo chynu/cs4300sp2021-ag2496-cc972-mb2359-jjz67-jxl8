@@ -23,15 +23,29 @@
         </div>
         <div class="sb_right">
             <div class="title noselect"><a href="/">{{ name }}</a></div>
-            <div class="search_item for-error">
-                {% if query_info and (not query_info['artist_name']) %}
-                    <div class="error-msg">Please enter a liked artist.</div>
-                {% elif query_info and (query_info['artist_name'] == query_info['disliked_artist']) %}
-                    <div class="error-msg"> Try entering different liked and disliked artists.</div>
-                {% elif query_info %}
-                    <div class="error-msg"> Artist not found. </div>
-                {% endif %}
-            </div>
+            {% if query_info %}
+                <div class="search_item for-error">
+                    {% set liked_artists_query = query_info['artist_name'].split(',') %}
+                    {% set disliked_artists_query = query_info['disliked_artist'].split(',') %}
+                    {% set overlap = namespace(val=false) %}
+
+                    {% for liked_artist in liked_artists_query %}
+                        {% for disliked_artist in disliked_artists_query %}
+                            {% if liked_artist == disliked_artist %}
+                                {% set overlap.val = true %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+
+                    {% if not query_info['artist_name'] %}
+                        <div class="error-msg">Please enter a liked artist.</div>
+                    {% elif overlap.val %}
+                        <div class="error-msg"> Try entering different liked and disliked artists.</div>
+                    {% else %}
+                        <div class="error-msg"> Artist not found.</div>
+                    {% endif %}
+                </div>
+            {% endif %}
             <form class="global-search" method="GET" autocomplete="off">
                 <div id="search_fields">
                     <!-- ============== FAV ARTIST QUERY ============== -->
