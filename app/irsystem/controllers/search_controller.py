@@ -19,7 +19,7 @@ jaccard = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag24
 with open("artist_descriptions.json") as file:
     artist_album_descriptions = json.load(file)
 
-artist_names = tf_idf.values[:,0]
+artist_names = [i.replace('"', '') for i in tf_idf.values[:,0]]
 artist_name_to_index = {artist_names[i]: i for i in range(len(artist_names))}
 matrix = tf_idf.to_numpy()[:,1:]
 

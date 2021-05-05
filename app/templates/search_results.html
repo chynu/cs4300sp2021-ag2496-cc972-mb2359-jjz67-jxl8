@@ -98,24 +98,6 @@
                 <div class="right">
                     <h4>{{ d['artist_name'] }}</h4>
                     <hr>
-                    <div class="artist-rating">
-                        {% set rounded_rating = d['rating']|int|round(1,'floor') %}
-                        {% set true_rating = d['rating']|float %}
-                        {% if true_rating > 0 %}
-                            {% for i in range(10) %}
-                                {% if true_rating > (i+1) %}
-                                    <span class="material-icons fill">star</span>
-                                {% elif (true_rating != rounded_rating) and (i == rounded_rating) %}
-                                    <span class="material-icons fill">star_half</span>
-                                {% else %}
-                                    <span class="material-icons empty">star_border</span>
-                                {% endif %}
-                            {% endfor %}
-                            {{ true_rating }}
-                        {% else %}
-                            <div class="no-rating">No rating for this artist.</div>
-                        {% endif %}
-                    </div>
                     <div class="sim-score">
                         <span class="tag
                                      {% if d['sim_score'] >= 60 %} high
@@ -133,6 +115,26 @@
                             {% endfor %}
                         {% else %}
                             <div class="no-genres">No common genres.</div>
+                        {% endif %}
+                    </div>
+                    <div class="artist-rating">
+                        {% set rounded_rating = d['rating']|int|round(1,'floor') %}
+                        {% set true_rating = d['rating']|float %}
+                        {% if true_rating > 0 %}
+                            Pitchfork review for {{ d['album'] }} <br>
+                            {% for i in range(10) %}
+                                {% if true_rating >= (i+1) %}
+                                    <span class="material-icons fill">star</span>
+                                {% elif (true_rating != rounded_rating) and (i == rounded_rating) %}
+                                    <span class="material-icons fill">star_half</span>
+                                {% else %}
+                                    <span class="material-icons empty">star_border</span>
+                                {% endif %}
+                            {% endfor %}
+                            {{ true_rating }} <br>
+                            {{ d['review'] }}
+                        {% else %}
+                            <div class="no-rating">No Pitchfork rating for this artist.</div>
                         {% endif %}
                     </div>
                     <iframe class="spotify-player" data-active="false"
