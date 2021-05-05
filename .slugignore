@@ -1,6 +1,5 @@
 data/
 scripts/
-removed_dups_new.csv
 venv/
 .ipynb_checkpoints/
 removed_dups_new_extra.csv

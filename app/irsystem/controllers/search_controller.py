@@ -13,25 +13,27 @@ net_id = "Alyssa Gao (ag2496), Celine Choo (cc972), Mahak Bindal (mb2359), Jeril
 ssl._create_default_https_context = ssl._create_unverified_context
 
 tf_idf = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/data/processed/tfidf_mat_compressed.csv")
-artist_details = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/removed_dups_new.csv")
+artist_details = pd.read_csv("removed_dups_new.csv")
 jaccard = pd.read_csv("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/data/processed/jaccard.csv",index_col=[0]).to_numpy()
 
-reviews = json.loads(requests.get("https://raw.githubusercontent.com/chynu/cs4300sp2021-ag2496-cc972-mb2359-jjz67-jxl8/master/data/raw/ratings.json").text)
+with open("artist_descriptions.json") as file:
+    artist_album_descriptions = json.load(file)
 
 artist_names = tf_idf.values[:,0]
 artist_name_to_index = {artist_names[i]: i for i in range(len(artist_names))}
 matrix = tf_idf.to_numpy()[:,1:]
 
-def get_artist_rating(artist_name):
-    """ Returns rating of [artist_name], 'not found' if rating DNE.
+def get_artist_album_description(artist_name):
+    """ Returns whole description of [artist_name], 'not found' if rating DNE.
+    Description contains latest album ('album_title'), rating ('rating'), and review ('review')
 
     Parameters: {artist_name: String}
-    Returns: Integer | String
+    Returns: Dict
     """
     try:
-        return reviews[artist_name]
+        return artist_album_descriptions[artist_name]
     except:
-        return 'not found'
+        return {'album_title':'', 'rating':0, 'review':''}
 
 def get_artist_id(artist_name):
     """ Returns id of [artist_name]'s profile.
@@ -204,6 +206,8 @@ def get_results(query, ling_desc, disliked_artist):
         return []
     for artist, score in top_rec_artists:
         genres = ", ".join(set(get_artist_genres(artist)) & set(get_artist_genres(query)))
+        description = get_artist_album_description(artist)
+
         data.append({
             'artist_name' : artist,
             'sim_score' : round(score * 100, 2),
@@ -212,7 +216,9 @@ def get_results(query, ling_desc, disliked_artist):
             'description' : get_artist_description(artist),
             'follower_count': get_artist_follower_count(artist),
             'img_url' : get_artist_photo(artist),
-            'rating' : get_artist_rating(artist)
+            'rating' : description['rating'],
+            'album' : description['album_title'],
+            'review' : description['review']
         })
     return data    
 
