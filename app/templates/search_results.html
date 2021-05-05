@@ -79,7 +79,15 @@
     <!-- RESULTS PAGE RESULTS -->
     <div id="results-container">
     {% if data %}
-        <h3>{{output_message}}</h3>
+        {% set liked_artists_query = query_info['artist_name'].split(',') %}
+        <h3>
+            Since you like
+                {% if liked_artists_query|length > 2 %}
+                    {% for a in liked_artists_query[:-1] %}{{ a }}, {% endfor %}
+                    and {{ liked_artists_query[-1] }}
+                {% elif liked_artists_query|length == 2 %}
+                    {{ liked_artists_query[0] }} and {{ liked_artists_query[1] }}
+                {% else %}{{ query_info['artist_name'] }}{% endif %}'s music, we recommend...</h3>
         <div class="results list">
 
             {% for d in data %}
@@ -121,18 +129,22 @@
                         {% set rounded_rating = d['rating']|int|round(1,'floor') %}
                         {% set true_rating = d['rating']|float %}
                         {% if true_rating > 0 %}
-                            Pitchfork review for {{ d['album'] }} <br>
-                            {% for i in range(10) %}
-                                {% if true_rating >= (i+1) %}
-                                    <span class="material-icons fill">star</span>
-                                {% elif (true_rating != rounded_rating) and (i == rounded_rating) %}
-                                    <span class="material-icons fill">star_half</span>
-                                {% else %}
-                                    <span class="material-icons empty">star_border</span>
-                                {% endif %}
-                            {% endfor %}
-                            {{ true_rating }} <br>
-                            {{ d['review'] }}
+                            <div class="review-title">Pitchfork review for "{{ d['album'] | safe }}":</div>
+                            <div class="review-body">
+                                <div class="review-stars">
+                                    {% for i in range(10) %}
+                                        {% if true_rating >= (i + 1) %}
+                                            <span class="material-icons fill">star</span>
+                                        {% elif (true_rating != rounded_rating) and (i == rounded_rating) %}
+                                            <span class="material-icons fill">star_half</span>
+                                        {% else %}
+                                            <span class="material-icons empty">star_border</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {{ true_rating }}/10
+                                </div>
+                                <div class="review-text">"{{ d['review'] | trim }}"</div>
+                            </div>
                         {% else %}
                             <div class="no-rating">No Pitchfork rating for this artist.</div>
                         {% endif %}

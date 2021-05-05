@@ -110,27 +110,6 @@
     cursor: default;
     letter-spacing: 1px;
 }
-.results.list .artist-rating {
-    margin-bottom: 13px;
-    cursor: default;
-}
-.results.list .artist-rating .no-rating,
-.results.list .genre-tags .no-genres
-{
-    font-style: italic;
-    color: #8f8f8f;
-}
-.results.list .artist-rating .material-icons {
-    font-size: 14px;
-    margin: 0; padding: 0;
-    letter-spacing: -2px;
-}
-.results.list .artist-rating .material-icons.fill {
-    color: #b5ac41;
-}
-.results.list .artist-rating .material-icons.empty {
-    color: #a6a488;
-}
 .results.list .sim-score {
     margin-bottom: 10px;
 }
@@ -151,6 +130,39 @@
 }
 .results.list .genre-tags .tag {
     background: #a3adbf;
+}
+.results.list .artist-rating {
+    margin-bottom: 13px;
+    cursor: default;
+}
+.results.list .artist-rating .review-title {
+    margin-bottom: 5px;
+}
+.results.list .artist-rating .review-body {
+    margin-left: 5px;
+    border-left: 2px solid #4d4d4d;
+    padding-left: 10px;
+}
+.results.list .artist-rating .review-text {
+    font-style: italic;
+    color: #4d4d4d;
+}
+.results.list .artist-rating .no-rating,
+.results.list .genre-tags .no-genres
+{
+    font-style: italic;
+    color: #8f8f8f;
+}
+.results.list .artist-rating .material-icons {
+    font-size: 14px;
+    margin: 0; padding: 0;
+    letter-spacing: -2px;
+}
+.results.list .artist-rating .material-icons.fill {
+    color: #b5ac41;
+}
+.results.list .artist-rating .material-icons.empty {
+    color: #a6a488;
 }
 .results.list .spotify-player {
     height: 0;
