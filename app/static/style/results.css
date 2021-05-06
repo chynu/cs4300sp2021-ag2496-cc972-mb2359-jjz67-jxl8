@@ -46,7 +46,12 @@
     border-radius: 10px;
     margin: 20px;
     padding: 20px;
+    transition: 200ms ease-in;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.results.list .card.item:hover {
+    transition: 200ms ease-in;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.4);
 }
 .results.list .card.item .left {
     margin-right: 20px;
@@ -77,13 +82,14 @@
     font-size: 13px;
     color: white;
     cursor: pointer;
-    transition: 200ms ease-in;
+    transition: 150ms ease-in;
     height: 40px;
 }
-.results.list .spotify:hover {
-    transition: 200ms ease-in;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    background: #3b3b3b;
+.results.list .spotify:hover,
+.results.list .card.item:hover .spotify {
+    transition: 150ms ease-in;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.4);
+    background: #2d2d2d;
 }
 .results.list .spotify img {
     width: 20px;
